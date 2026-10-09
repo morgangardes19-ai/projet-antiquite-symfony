@@ -8,12 +8,72 @@
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    <div class="patati">
 
-        <button type="submit" class="btn">Register</button>
+        {{ form_label(registrationForm.email, "Adresse mail", {
+            'label_attr': {
+                "class": "ddiusqf"
+            }
+        }) }}
+
+        {{ form_widget(registrationForm.email, {
+            'attr': {
+                "class": "hgfydrt"
+            }
+        }) }}
+
+    </div>
+        
+    <div>
+
+        {{ form_label(registrationForm.plainPassword.first) }}
+
+        {{ form_widget(registrationForm.plainPassword.first) }}
+
+    </div>
+
+    <div>
+
+        {{ form_label(registrationForm.plainPassword.second) }}
+
+        {{ form_widget(registrationForm.plainPassword.second) }}
+
+    </div>
+    <div style="color: red;">
+        {{ form_errors(registrationForm.plainPassword.first) }}
+    </div>
+
+    <div>
+
+        {{ form_label(registrationForm.firstName, "Prénom") }}
+
+        {{ form_widget(registrationForm.firstName) }}
+
+    </div>
+
+    <div>
+
+        {{ form_label(registrationForm.lastName, "Nom") }}
+
+        {{ form_widget(registrationForm.lastName) }}
+
+    </div>
+
+   
+
+    <div>
+
+        {{ form_label(registrationForm.agreeTerms, "Accepter les conditions d'utilisation") }}
+
+        {{ form_widget(registrationForm.agreeTerms) }}
+
+    </div>
+
+  
+
+    <button type="submit" class="">Register</button>
+
+    
+    
     {{ form_end(registrationForm) }}
 {% endblock %}
