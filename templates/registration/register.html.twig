@@ -45,18 +45,24 @@
 
     <div>
 
-        {{ form_label(registrationForm.firstName, "Prénom") }}
+        {{ form_label(registrationForm.firstname, "Prénom") }}
 
-        {{ form_widget(registrationForm.firstName) }}
+        {{ form_widget(registrationForm.firstname) }}
 
+    </div>
+    <div style="color: red;">
+        {{ form_errors(registrationForm.firstname) }}
     </div>
 
     <div>
 
-        {{ form_label(registrationForm.lastName, "Nom") }}
+        {{ form_label(registrationForm.lastname, "Nom") }}
 
-        {{ form_widget(registrationForm.lastName) }}
+        {{ form_widget(registrationForm.lastname) }}
 
+    </div>
+    <div style="color: red;">
+        {{ form_errors(registrationForm.lastname) }}
     </div>
 
    
