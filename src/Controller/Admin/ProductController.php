@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class ProductController extends AbstractController
 {
-    #[Route('', name: 'app_product_index', methods: ['GET'])]
+    #[Route('', name: 'admin_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
         return $this->render('admin/product/index.html.twig', [
@@ -24,7 +24,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/nouveau', name: 'app_product_new', methods: ['GET', 'POST'])]
+    #[Route('/nouveau', name: 'admin_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
@@ -44,7 +44,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'admin_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
         return $this->render('admin/product/show.html.twig', [
@@ -52,7 +52,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/modifier', name: 'app_product_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/modifier', name: 'admin_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProductType::class, $product);
@@ -70,7 +70,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'admin_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->getPayload()->getString('_token'))) {
