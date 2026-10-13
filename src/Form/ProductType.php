@@ -6,12 +6,16 @@ use App\Entity\Category;
 use App\Entity\Product;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
@@ -36,7 +40,7 @@ class ProductType extends AbstractType
             ->add('material', TextType::class, ['label' => 'Matériau'])
             ->add('style', TextType::class, ['label' => 'Style / Époque'])
             ->add('origin', TextType::class, ['label' => 'Origine'])
-             ->add('stock', IntegerType::class, [
+            ->add('stock', IntegerType::class, [
                 'label' => 'Stock disponible',
                 'constraints' => [
                     new PositiveOrZero(message: 'Le stock ne peut pas être négatif.'),
@@ -57,6 +61,26 @@ class ProductType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder'  => 'Choisissez une catégorie',
                 'constraints'  => [new NotBlank(message: 'La catégorie est obligatoire.')],
+            ])
+
+            ->add('imageFiles', FileType::class, [
+                'label'    => 'Photos de la pièce',
+                'mapped'   => false,
+                'multiple' => true,
+                'required' => false,
+                'attr'     => ['accept' => 'image/jpeg,image/png,image/webp'],
+                'constraints' => [
+                    new Count(max: 5),
+                    // PROTECTION 1 : validation du type MIME et de la taille
+                    new All([
+                        new Image(
+                            maxSize: '1M',
+                            maxSizeMessage: 'Chaque image ne doit pas dépasser 2 Mo.',
+                            mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                            mimeTypesMessage:'Formats acceptés : JPG, PNG, WebP.',
+                        ),
+                    ]),
+                ],
             ]);
     }
 

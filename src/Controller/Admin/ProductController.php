@@ -3,10 +3,14 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Product;
+use App\Entity\ProductImage;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,8 +37,11 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $product->setSlug($slugger->slug($product->getName()));
+            $product->setSlug($slugger->slug($product->getName())->toString());
             $product->setCreatedAt(new \DateTimeImmutable());
+
+            $this->handleImages($form, $product, $entityManager);
+
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -64,7 +71,9 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $product->setSlug($slugger->slug($product->getName()));
+            $product->setSlug($slugger->slug($product->getName())->toString());
+
+            $this->handleImages($form, $product, $entityManager);
 
             $entityManager->flush();
 
@@ -86,5 +95,47 @@ final class ProductController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_product_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Traite et enregistre les images téléversées de manière sécurisée.
+     */
+    private function handleImages(FormInterface $form, Product $product, EntityManagerInterface $entityManager): void
+    {
+        /** @var UploadedFile[]|null $imageFiles */
+        $imageFiles = $form->get('imageFiles')->getData();
+
+        if (!$imageFiles) {
+            return;
+        }
+
+        foreach ($imageFiles as $imageFile) {
+            // PROTECTION 2 : l'extension est déduite du CONTENU réel du fichier.
+            //    Un fichier nommé "photo.jpg" mais contenant du PHP ne passera pas.
+            $extension = $imageFile->guessExtension() ?? 'bin';
+
+            // PROTECTION 3 : nom aléatoire de 32 caractères hexadécimaux.
+            //    → impossible d'écraser une image existante
+            //    → impossible d'utiliser "../../" pour sortir du dossier
+            $newFilename = bin2hex(random_bytes(16)) . '.' . $extension;
+
+            try {
+                // PROTECTION 4 : destination dans public/uploads/, jamais dans src/
+                $imageFile->move(
+                    $this->getParameter('products_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                $this->addFlash('danger', 'Une erreur est survenue lors du téléversement d\'une image.');
+                continue;
+            }
+
+            $image = new ProductImage();
+            $image->setFilename($newFilename);
+            $image->setProduct($product);           // côté propriétaire → écrit la clé étrangère
+            $product->addProductImage($image);      // on garde la collection en mémoire cohérente
+
+            $entityManager->persist($image);
+        }
     }
 }

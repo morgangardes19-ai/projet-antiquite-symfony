@@ -62,6 +62,24 @@
         </tbody>
     </table>
 
+    <h2 class="text-xl font-semibold mt-8 mb-4">Photos</h2>
+
+    {% if product.productImages is empty %}
+        <p class="text-stone-500">Aucune photo pour cette pièce.</p>
+    {% else %}
+        <div class="flex flex-wrap gap-4">
+            {% for image in product.productImages %}
+                <img
+                    src="{{ asset('uploads/products/' ~ image.filename) }}"
+                    alt="Photo de {{ product.name }}"
+                    width="200"
+                    height="200"
+                    class="w-48 h-48 object-cover rounded-lg border border-stone-200"
+                >
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <a href="{{ path('admin_product_index') }}">back to list</a>
 
     <a href="{{ path('admin_product_edit', {'id': product.id}) }}">edit</a>
