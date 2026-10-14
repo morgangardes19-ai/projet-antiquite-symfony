@@ -40,7 +40,7 @@ final class ProductController extends AbstractController
             $product->setSlug($slugger->slug($product->getName())->toString());
             $product->setCreatedAt(new \DateTimeImmutable());
 
-            $this->handleImages($form, $product, $entityManager);
+            $this->handleImages($form, $product, $entityManager, $slugger);
 
             $entityManager->persist($product);
             $entityManager->flush();
@@ -73,7 +73,7 @@ final class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $product->setSlug($slugger->slug($product->getName())->toString());
 
-            $this->handleImages($form, $product, $entityManager);
+            $this->handleImages($form, $product, $entityManager, $slugger);
 
             $entityManager->flush();
 
@@ -100,7 +100,7 @@ final class ProductController extends AbstractController
     /**
      * Traite et enregistre les images téléversées de manière sécurisée.
      */
-    private function handleImages(FormInterface $form, Product $product, EntityManagerInterface $entityManager): void
+    private function handleImages(FormInterface $form, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger): void
     {
         /** @var UploadedFile[]|null $imageFiles */
         $imageFiles = $form->get('imageFiles')->getData();
@@ -114,10 +114,11 @@ final class ProductController extends AbstractController
             //    Un fichier nommé "photo.jpg" mais contenant du PHP ne passera pas.
             $extension = $imageFile->guessExtension() ?? 'bin';
 
-            // PROTECTION 3 : nom aléatoire de 32 caractères hexadécimaux.
-            //    → impossible d'écraser une image existante
-            //    → impossible d'utiliser "../../" pour sortir du dossier
-            $newFilename = bin2hex(random_bytes(16)) . '.' . $extension;
+            // PROTECTION 3 : nom aléatoire avec base de l'ancien nom.
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            // this is needed to safely include the file name as part of the URL
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
             try {
                 // PROTECTION 4 : destination dans public/uploads/, jamais dans src/

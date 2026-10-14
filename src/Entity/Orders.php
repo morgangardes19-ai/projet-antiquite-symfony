@@ -41,7 +41,7 @@ class Orders
      * @var Collection<int, OrderItem>
      */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orders')]
-    private Collection $orderItem;
+    private Collection $orderItems;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
@@ -50,7 +50,7 @@ class Orders
     public function __construct()
     {
         $this->payment = new ArrayCollection();
-        $this->orderItem = new ArrayCollection();
+        $this->orderItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,15 +151,15 @@ class Orders
     /**
      * @return Collection<int, OrderItem>
      */
-    public function getOrderItem(): Collection
+    public function getOrderItems(): Collection
     {
-        return $this->orderItem;
+        return $this->orderItems;
     }
 
     public function addOrderItem(OrderItem $orderItem): static
     {
-        if (!$this->orderItem->contains($orderItem)) {
-            $this->orderItem->add($orderItem);
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
             $orderItem->setOrders($this);
         }
 
@@ -168,7 +168,7 @@ class Orders
 
     public function removeOrderItem(OrderItem $orderItem): static
     {
-        if ($this->orderItem->removeElement($orderItem)) {
+        if ($this->orderItems->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
             if ($orderItem->getOrders() === $this) {
                 $orderItem->setOrders(null);

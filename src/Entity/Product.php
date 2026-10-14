@@ -60,13 +60,13 @@ class Product
      * @var Collection<int, ProductImage>
      */
     #[ORM\OneToMany(targetEntity: ProductImage::class, mappedBy: 'product')]
-    private Collection $productImage;
+    private Collection $productImages;
 
     /**
      * @var Collection<int, OrderItem>
      */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'product')]
-    private Collection $orderItem;
+    private Collection $orderItems;
 
     /**
      * @var Collection<int, Favorites>
@@ -76,8 +76,8 @@ class Product
 
     public function __construct()
     {
-        $this->productImage = new ArrayCollection();
-        $this->orderItem = new ArrayCollection();
+        $this->productImages = new ArrayCollection();
+        $this->orderItems = new ArrayCollection();
         $this->favorites = new ArrayCollection();
     }
 
@@ -245,15 +245,15 @@ class Product
     /**
      * @return Collection<int, ProductImage>
      */
-    public function getProductImage(): Collection
+    public function getProductImages(): Collection
     {
-        return $this->productImage;
+        return $this->productImages;
     }
 
     public function addProductImage(ProductImage $productImage): static
     {
-        if (!$this->productImage->contains($productImage)) {
-            $this->productImage->add($productImage);
+        if (!$this->productImages->contains($productImage)) {
+            $this->productImages->add($productImage);
             $productImage->setProduct($this);
         }
 
@@ -262,7 +262,7 @@ class Product
 
     public function removeProductImage(ProductImage $productImage): static
     {
-        if ($this->productImage->removeElement($productImage)) {
+        if ($this->productImages->removeElement($productImage)) {
             // set the owning side to null (unless already changed)
             if ($productImage->getProduct() === $this) {
                 $productImage->setProduct(null);
@@ -277,13 +277,13 @@ class Product
      */
     public function getOrderItem(): Collection
     {
-        return $this->orderItem;
+        return $this->orderItems;
     }
 
     public function addOrderItem(OrderItem $orderItem): static
     {
-        if (!$this->orderItem->contains($orderItem)) {
-            $this->orderItem->add($orderItem);
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
             $orderItem->setProduct($this);
         }
 
@@ -292,7 +292,7 @@ class Product
 
     public function removeOrderItem(OrderItem $orderItem): static
     {
-        if ($this->orderItem->removeElement($orderItem)) {
+        if ($this->orderItems->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
             if ($orderItem->getProduct() === $this) {
                 $orderItem->setProduct(null);

@@ -16,7 +16,7 @@ class ProductImage
     #[ORM\Column(length: 255)]
     private ?string $filename = null;
 
-    #[ORM\ManyToOne(inversedBy: 'productImage')]
+    #[ORM\ManyToOne(inversedBy: 'productImages')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
 
