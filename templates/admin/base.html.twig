@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+
+        {# ══════════ MENU LATÉRAL ══════════ #}
+        <aside class="lg:w-64 shrink-0">
+            <nav
+                aria-label="Navigation de l'administration"
+                class="bg-white rounded-xl border border-stone-200 shadow-sm p-4 lg:sticky lg:top-4"
+            >
+
+                <p class="text-xs uppercase tracking-wider text-stone-500 px-3 mb-3">
+                    Administration
+                </p>
+
+                <ul class="space-y-1 text-sm">
+                    <li>
+                        <a
+                            href="{{ path('admin_dashboard') }}"
+                            class="block px-3 py-2 rounded-lg transition
+                              {{ app.request.attributes.get('_route') == 'admin_dashboard'
+                                 ? 'bg-amber-100 text-amber-900 font-semibold'
+                                 : 'text-stone-700 hover:bg-stone-100' }}"
+                        >
+                            📊 Tableau de bord
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ path('admin_product_index') }}"
+                            class="block px-3 py-2 rounded-lg transition
+                              {{ app.request.attributes.get('_route') starts with 'admin_product_'
+                                 ? 'bg-amber-100 text-amber-900 font-semibold'
+                                 : 'text-stone-700 hover:bg-stone-100' }}"
+                        >
+                            🏺 Produits
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ path('admin_category_index') }}"
+                            class="block px-3 py-2 rounded-lg transition
+                              {{ app.request.attributes.get('_route') starts with 'admin_category_'
+                                 ? 'bg-amber-100 text-amber-900 font-semibold'
+                                 : 'text-stone-700 hover:bg-stone-100' }}"
+                        >
+                            🗂️ Catégories
+                        </a>
+                    </li>
+                    <li class="pt-3 mt-3 border-t border-stone-100">
+                        <a
+                            href="{{ path('app_home') }}"
+                            class="block px-3 py-2 rounded-lg text-stone-500 hover:bg-stone-100 transition"
+                        >
+                            ← Retour au site
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        {# ══════════ CONTENU DE LA PAGE ══════════ #}
+        <div class="flex-1 min-w-0">
+            {% block admin_body %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

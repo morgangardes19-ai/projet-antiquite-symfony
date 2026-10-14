@@ -1,0 +1,97 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tableau de bord — Administration{% endblock %}
+
+{% block admin_body %}
+
+    <h1 class="text-3xl font-serif text-stone-900 mb-2">Tableau de bord</h1>
+    <p class="text-stone-600 mb-8">Vue d'ensemble de l'activité de l'atelier.</p>
+
+    {# ══════════════════════════════════════════════════
+       1. LES 4 CARTES D'INDICATEURS
+       ══════════════════════════════════════════════════ #}
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+
+        {# ── Carte 1 : nombre de pièces ── #}
+        <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+            <p class="text-xs uppercase tracking-wider text-stone-500">Pièces au catalogue</p>
+            <p class="text-4xl font-bold text-amber-700 mt-2">{{ totalProducts }}</p>
+        </article>
+
+        {# ── Carte 2 : valeur du stock ── #}
+        <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+            <p class="text-xs uppercase tracking-wider text-stone-500">Valeur du stock</p>
+            <p class="text-3xl font-bold text-amber-700 mt-2">
+                {{ catalogValue|number_format(0, ',', ' ') }} €
+            </p>
+        </article>
+
+        {# ── Carte 3 : nombre de commandes ── #}
+        <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+            <p class="text-xs uppercase tracking-wider text-stone-500">Commandes</p>
+            <p class="text-4xl font-bold text-amber-700 mt-2">{{ totalOrders }}</p>
+        </article>
+
+        {# ── Carte 4 : nombre de clients ── #}
+        <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+            <p class="text-xs uppercase tracking-wider text-stone-500">Clients inscrits</p>
+            <p class="text-4xl font-bold text-amber-700 mt-2">{{ totalCustomers }}</p>
+        </article>
+
+    </div>
+
+    {# ══════════════════════════════════════════════════
+       2. LES ALERTES DE STOCK
+       ══════════════════════════════════════════════════ #}
+    <h2 class="text-xl font-semibold text-stone-900 mb-4">Alertes de stock</h2>
+
+    {% if lowStock is empty %}
+        <p class="bg-white rounded-xl border border-stone-200 p-6 text-stone-600">
+            Aucune alerte : toutes vos pièces sont bien approvisionnées.
+        </p>
+    {% else %}
+        <ul class="bg-white rounded-xl border border-stone-200 divide-y divide-stone-100 overflow-hidden">
+            {% for product in lowStock %}
+                <li class="flex items-center justify-between gap-4 px-6 py-4">
+                    <a href="{{ path('admin_product_show', {'id': product.id}) }}"
+                       class="font-medium text-stone-900 hover:text-amber-700 hover:underline">
+                        {{ product.name }}
+                    </a>
+                    <span class="shrink-0 text-xs font-semibold px-3 py-1 rounded-full
+                                 {{ product.stock == 0 ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800' }}">
+                        {{ product.stock == 0 ? 'Épuisée' : product.stock ~ ' en stock' }}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════
+       3. LES ACCÈS RAPIDES
+       ══════════════════════════════════════════════════ #}
+    <div class="flex flex-wrap gap-4 mt-10">
+
+        <a href="{{ path('admin_product_new') }}"
+           class="bg-amber-700 text-white px-6 py-3 rounded-lg font-medium
+                  hover:bg-amber-800 transition
+                  focus:outline-none focus:ring-2 focus:ring-amber-500">
+            + Ajouter une pièce
+        </a>
+
+        <a href="{{ path('admin_product_index') }}"
+           class="px-6 py-3 rounded-lg text-stone-700 border border-stone-300 bg-white
+                  hover:bg-stone-100 transition
+                  focus:outline-none focus:ring-2 focus:ring-stone-400">
+            Gérer le catalogue
+        </a>
+
+        <a href="{{ path('admin_category_index') }}"
+           class="px-6 py-3 rounded-lg text-stone-700 border border-stone-300 bg-white
+                  hover:bg-stone-100 transition
+                  focus:outline-none focus:ring-2 focus:ring-stone-400">
+            Gérer les catégories
+        </a>
+
+    </div>
+
+{% endblock %}

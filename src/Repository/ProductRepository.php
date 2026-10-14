@@ -40,4 +40,32 @@ class ProductRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    /**
+     * Récupère les pièces dont le stock est faible.
+     *
+     * @return Product[]
+     */
+    public function findLowStock(int $threshold = 3): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.stock <= :threshold')
+            ->setParameter('threshold', $threshold)
+            ->orderBy('p.stock', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Calcule la valeur totale du stock au catalogue.
+     */
+    public function getCatalogValue(): float
+    {
+        $result = $this->createQueryBuilder('p')
+            ->select('SUM(p.price * p.stock)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (float) ($result ?? 0);
+    }
 }
