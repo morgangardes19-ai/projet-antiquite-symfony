@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} — Atelier d'Antan{% endblock %}
+
+{% block body %}
+    <section class="max-w-7xl mx-auto px-4 py-12">
+        <h1 class="text-4xl font-serif text-stone-900 mb-6">{{ product.name }}</h1>
+        <p class="text-stone-600">{{ product.description }}</p>
+    </section>
+{% endblock %}

@@ -1,0 +1,64 @@
+{# Carte produit réutilisable — accueil, catalogue, favoris #}
+<article
+    class="group bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden
+                hover:shadow-md transition flex flex-col"
+>
+
+    <a
+        href="{{ path('app_catalog_show', {'slug': product.slug}) }}"
+        class="block overflow-hidden"
+        tabindex="-1"
+        aria-hidden="true"
+    >
+        {% set image = product.productImages|first %}
+        {% if image %}
+            <img
+                src="{{ asset('uploads/products/' ~ image.filename) }}"
+                alt=""
+                width="600"
+                height="450"
+                loading="lazy"
+                class="w-full h-56 object-cover group-hover:scale-105 transition duration-500"
+            >
+        {% else %}
+            <div class="w-full h-56 bg-stone-100 flex items-center justify-center text-stone-400 text-sm">
+                Aucune photo
+            </div>
+        {% endif %}
+    </a>
+
+    <div class="p-5 flex flex-col flex-1">
+        <p class="text-xs uppercase tracking-wider text-stone-500 mb-1">
+            {{ product.category.name }}
+        </p>
+
+        <h3 class="font-serif text-lg text-stone-900 leading-snug mb-2">
+            <a
+                href="{{ path('app_catalog_show', {'slug': product.slug}) }}"
+                class="hover:text-amber-700 transition"
+            >
+                {{ product.name }}
+            </a>
+        </h3>
+
+        <p class="text-sm text-stone-600 mb-4 line-clamp-2">
+            {{ product.description }}
+        </p>
+
+        <div class="mt-auto flex items-center justify-between gap-2">
+            <span class="text-xl font-bold text-amber-700">
+                {{ product.price|number_format(2, ',', ' ') }} €
+            </span>
+
+            {% if product.stock > 0 %}
+                <span class="text-xs font-medium px-2 py-1 rounded-full bg-green-100 text-green-800">
+                    Disponible
+                </span>
+            {% else %}
+                <span class="text-xs font-medium px-2 py-1 rounded-full bg-red-100 text-red-800">
+                    Vendu
+                </span>
+            {% endif %}
+        </div>
+    </div>
+</article>

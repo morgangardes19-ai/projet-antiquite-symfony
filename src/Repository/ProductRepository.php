@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
+use Doctrine\ORM\Tools\Pagination\Window;
+use Doctrine\ORM\Tools\Pagination\WindowPage;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -67,5 +70,25 @@ class ProductRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return (float) ($result ?? 0);
+    }
+
+    /**
+     * Récupère les produits paginés pour le catalogue public.
+     *
+     * @return WindowPage<Product>
+     */
+    public function findPaginated(int $page = 1, int $limit = 12): WindowPage
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->addSelect('img')
+            ->leftJoin('p.productImages', 'img')
+            ->orderBy('p.createdAt', 'DESC');
+
+        $paginator = new OffsetPaginator(fetchJoinCollection: true);
+
+        return $paginator->paginate(
+            $qb,
+            Window::fromPageNumberAndSize($page, $limit)
+        );
     }
 }
