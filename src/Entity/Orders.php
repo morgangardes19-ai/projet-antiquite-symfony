@@ -37,15 +37,15 @@ class Orders
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'orders')]
     private Collection $payment;
 
-    /**
-     * @var Collection<int, OrderItem>
-     */
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orders')]
-    private Collection $orderItems;
-
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Delivery $delivery = null;
+
+    /**
+     * @var Collection<int, OrderItem>
+     */
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orders', orphanRemoval: true)]
+    private Collection $orderItems;
 
     public function __construct()
     {
@@ -148,6 +148,18 @@ class Orders
         return $this;
     }
 
+    public function getDelivery(): ?Delivery
+    {
+        return $this->delivery;
+    }
+
+    public function setDelivery(?Delivery $delivery): static
+    {
+        $this->delivery = $delivery;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, OrderItem>
      */
@@ -174,18 +186,6 @@ class Orders
                 $orderItem->setOrders(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getDelivery(): ?Delivery
-    {
-        return $this->delivery;
-    }
-
-    public function setDelivery(?Delivery $delivery): static
-    {
-        $this->delivery = $delivery;
 
         return $this;
     }

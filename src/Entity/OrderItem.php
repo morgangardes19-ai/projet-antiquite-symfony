@@ -16,13 +16,14 @@ class OrderItem
     #[ORM\Column]
     private ?int $quantity = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderItem')]
+    #[ORM\ManyToOne(inversedBy: 'orderItems')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderItem')]
+    #[ORM\ManyToOne(inversedBy: 'orderItems')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Orders $orders = null;
+
 
     public function getId(): ?int
     {

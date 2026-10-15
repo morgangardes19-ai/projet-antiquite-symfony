@@ -29,10 +29,11 @@ class CatalogController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'show', methods: ['GET'])]
-    public function show(Product $product): Response
+    public function show(string $slug, ProductRepository $productRepository): Response
     {
+        
         return $this->render('catalog/show.html.twig', [
-            'product' => $product,
+            'product' => $productRepository->findBy(["slug" => $slug]),
         ]);
     }
 }
