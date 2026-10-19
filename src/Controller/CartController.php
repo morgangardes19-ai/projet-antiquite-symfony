@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\CartItemType;
+use App\Repository\ProductRepository;
 use App\Service\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,12 +14,34 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/panier', name: 'app_cart_')]
 class CartController extends AbstractController
 {
-    
+
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(CartService $cartService): Response
+    public function index(CartService $cartService, ProductRepository $productRepository): Response
     {
+        $items = $cartService->getItems();
+
+        $lines = [];
+        $total = 0.0;
+
+        if ($items !== []) {
+            $products = $productRepository->findBy(['id' => array_keys($items)]);
+
+            foreach ($products as $product) {
+                $quantity = $items[$product->getId()];
+                $subtotal = (float) $product->getPrice() * $quantity;
+                $total   += $subtotal;
+
+                $lines[] = [
+                    'product'  => $product,
+                    'quantity' => $quantity,
+                    'subtotal' => $subtotal,
+                ];
+            }
+        }
+
         return $this->render('cart/index.html.twig', [
-            'items' => $cartService->getItems(),
+            'lines' => $lines,
+            'total' => $total,
         ]);
     }
 
