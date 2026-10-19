@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\CartItemType;
 use App\Repository\ProductRepository;
 use App\Service\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,17 +36,27 @@ class CatalogController extends AbstractController
 
     //     dd($cartService->getItems());
     //     return $this->render('cart/temporaire_show.html.twig', [
-            
+
     //     ]);
     // }
 
     #[Route('/{slug}', name: 'show', methods: ['GET'])]
     public function show(string $slug, ProductRepository $productRepository): Response
     {
+        $product = $productRepository->findOneBy(['slug' => $slug]);
+
+        if (!$product) {
+            throw $this->createNotFoundException('Cette pièce n\'existe pas.');
+        }
+
+        $cartForm = $this->createForm(CartItemType::class, null, [
+            'max_stock' => $product->getStock(),
+            'action'    => $this->generateUrl('app_cart_add', ['id' => $product->getId()]),
+        ]);
+
         return $this->render('catalog/show.html.twig', [
-            'product' => $productRepository->findOneBy(["slug" => $slug]),
+            'product'  => $product,
+            'cartForm' => $cartForm,
         ]);
     }
-
-    
 }
