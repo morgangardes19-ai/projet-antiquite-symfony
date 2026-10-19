@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
 use App\Repository\ProductRepository;
+use App\Service\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,12 +28,24 @@ class CatalogController extends AbstractController
         ]);
     }
 
+    // // route temporaire pour voir le panier
+    // #[Route('/panier', name: 'show_panier', methods: ['GET'])]
+    // public function showPanier(CartService $cartService): Response
+    // {
+
+    //     dd($cartService->getItems());
+    //     return $this->render('cart/temporaire_show.html.twig', [
+            
+    //     ]);
+    // }
+
     #[Route('/{slug}', name: 'show', methods: ['GET'])]
     public function show(string $slug, ProductRepository $productRepository): Response
     {
-        
         return $this->render('catalog/show.html.twig', [
-            'product' => $productRepository->findBy(["slug" => $slug]),
+            'product' => $productRepository->findOneBy(["slug" => $slug]),
         ]);
     }
+
+    
 }
