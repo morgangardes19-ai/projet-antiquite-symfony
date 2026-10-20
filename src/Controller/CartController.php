@@ -71,4 +71,51 @@ class CartController extends AbstractController
             'slug' => $product->getSlug(),
         ]);
     }
+
+    #[Route('/modifier/{id}', name: 'update', methods: ['POST'])]
+    public function update(Product $product, Request $request, CartService $cartService): Response
+    {
+        if (!$this->isCsrfTokenValid(
+            'cart_update_' . $product->getId(),
+            $request->getPayload()->getString('_token')
+        )) {
+            throw $this->createAccessDeniedException('Jeton de sécurité invalide.');
+        }
+
+        $quantity = $request->getPayload()->getInt('quantity', 1);
+
+        if ($quantity > $product->getStock()) {
+            $quantity = $product->getStock(); // si un utilisateur tape 999 alors qu'il reste 3, la quantité est ramenée à 3
+            $this->addFlash('attention', sprintf(
+                'Il ne reste que %d exemplaire(s) de cette pièce.',
+                $product->getStock()
+            ));
+        } else {
+            $this->addFlash('success', 'Panier mis à jour.');
+        }
+
+        $cartService->update($product->getId(), $quantity);
+
+        return $this->redirectToRoute('app_cart_index');
+    }
+
+    #[Route('/supprimer/{id}', name: 'remove', methods: ['POST'])]
+    public function remove(Product $product, Request $request, CartService $cartService): Response
+    {
+        if (!$this->isCsrfTokenValid(
+            'cart_remove_' . $product->getId(),
+            $request->getPayload()->getString('_token')
+        )) {
+            throw $this->createAccessDeniedException('Jeton de sécurité invalide.');
+        }
+
+        $cartService->remove($product->getId());
+
+        $this->addFlash('success', sprintf(
+            '« %s » a été retiré de votre panier.',
+            $product->getName()
+        ));
+
+        return $this->redirectToRoute('app_cart_index');
+    }
 }
