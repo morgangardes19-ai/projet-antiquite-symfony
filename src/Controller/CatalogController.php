@@ -41,22 +41,29 @@ class CatalogController extends AbstractController
     // }
 
     #[Route('/{slug}', name: 'show', methods: ['GET'])]
-    public function show(string $slug, ProductRepository $productRepository): Response
-    {
+    public function show(
+        string $slug,
+        ProductRepository $productRepository,
+        CartService $cartService,
+    ): Response {
         $product = $productRepository->findOneBy(['slug' => $slug]);
 
         if (!$product) {
             throw $this->createNotFoundException('Cette pièce n\'existe pas.');
         }
 
+        $alreadyInCart = $cartService->getQuantity($product->getId());
+        $remaining     = max(0, $product->getStock() - $alreadyInCart);
+
         $cartForm = $this->createForm(CartItemType::class, null, [
-            'max_stock' => $product->getStock(),
+            'max_stock' => $remaining,
             'action'    => $this->generateUrl('app_cart_add', ['id' => $product->getId()]),
         ]);
 
         return $this->render('catalog/show.html.twig', [
-            'product'  => $product,
-            'cartForm' => $cartForm,
+            'product'   => $product,
+            'cartForm'  => $cartForm,
+            'remaining' => $remaining,
         ]);
     }
 }

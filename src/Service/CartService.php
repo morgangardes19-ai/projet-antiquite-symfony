@@ -22,10 +22,21 @@ class CartService
         return $this->requestStack->getSession();
     }
 
-    /** @return array<int, int> */
+    /** 
+     * Récupère les produits du panier et leur quantité
+     * @return array<int, int> */
     public function getItems(): array
     {
         return $this->getSession()->get(self::SESSION_KEY, []);
+    }
+
+    /**
+     * Méthode qui permet d'obtenir la quantité d'un produit dans le panier à partir de son id
+     */
+    public function getQuantity(int $productId): int
+    {
+        // Si j'ai le produit dans le panier je return sa quantité sinon je return 0
+        return $this->getItems()[$productId] ?? 0;
     }
 
     public function add(int $productId, int $quantity = 1): void
