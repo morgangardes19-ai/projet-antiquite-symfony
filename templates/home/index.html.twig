@@ -1,20 +1,241 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Atelier d'Antan — Antiquités & objets d'art{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {# ══════════════════════════════════════════════════════════════ #}
+    {#  ① HERO                                                       #}
+    {# ══════════════════════════════════════════════════════════════ #}
+    <section
+        class="relative bg-linear-to-br from-stone-900 via-stone-800 to-amber-950
+                text-stone-100 overflow-hidden"
+    >
+        <div
+            class="relative max-w-7xl mx-auto px-4 py-24 md:py-32
+                    flex flex-col items-center gap-6 text-center"
+        >
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Dev404/Documents/Symfony/Antiquite-Projet/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/Users/Dev404/Documents/Symfony/Antiquite-Projet/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+            <p class="text-amber-500 text-xs md:text-sm tracking-[0.3em] uppercase">
+                Antiquités & objets d'art
+            </p>
+
+            <h1 class="font-serif text-4xl md:text-6xl leading-tight">
+                Des pièces d'exception,<br>
+                <span class="text-amber-400">choisies une à une</span>
+            </h1>
+
+            <p class="max-w-2xl text-stone-300 text-lg">
+                Meubles anciens, objets de curiosité et pièces de collection,
+                sélectionnés avec soin et restaurés dans nos ateliers.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <a
+                    href="{{ path('app_catalog_index') }}"
+                    class="px-8 py-3 rounded-lg bg-amber-700 text-white font-semibold
+                      hover:bg-amber-600 transition
+                      focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2
+                      focus:ring-offset-stone-900"
+                >
+                    Découvrir le catalogue
+                </a>
+                <a
+                    href="#categories"
+                    class="px-8 py-3 rounded-lg border border-stone-600 text-stone-200 font-semibold
+                      hover:bg-stone-800 transition
+                      focus:outline-none focus:ring-2 focus:ring-stone-400"
+                >
+                    Nos catégories
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════ #}
+    {#  ② CATÉGORIES                                                 #}
+    {# ══════════════════════════════════════════════════════════════ #}
+    <section id="categories" class="max-w-7xl mx-auto px-4 py-20">
+        <div class="flex flex-col gap-12">
+
+            <div class="flex flex-col gap-3 text-center">
+                <h2 class="font-serif text-3xl md:text-4xl text-stone-900">
+                    Nos catégories
+                </h2>
+                <p class="text-stone-600">Explorez notre collection par univers</p>
+            </div>
+
+            <div class="flex flex-wrap gap-6">
+                {% for category in categories %}
+                    <a
+                        href="{{ path('app_catalog_index') }}"
+                        class="group grow basis-80 flex flex-col gap-3
+                          bg-white rounded-xl border border-stone-200 p-8
+                          hover:border-amber-400 hover:shadow-lg transition
+                          focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    >
+
+                        <h3
+                            class="font-serif text-xl text-stone-900
+                               group-hover:text-amber-800 transition"
+                        >
+                            {{ category.name }}
+                        </h3>
+
+                        <p class="text-sm text-stone-600 line-clamp-2 flex-1">
+                            {{ category.description }}
+                        </p>
+
+                        <span class="text-sm text-amber-700 font-medium">
+                            Explorer →
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════ #}
+    {#  ③ NOUVEAUTÉS                                                 #}
+    {# ══════════════════════════════════════════════════════════════ #}
+    <section class="bg-white border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 py-20">
+            <div class="flex flex-col gap-12">
+
+                <div class="flex flex-col gap-3 text-center">
+                    <h2 class="font-serif text-3xl md:text-4xl text-stone-900">
+                        Dernières arrivées
+                    </h2>
+                    <p class="text-stone-600">Les pièces qui viennent d'entrer à l'atelier</p>
+                </div>
+
+                <div class="flex flex-wrap gap-6">
+                    {% for product in featured %}
+                        <article class="group grow basis-72 flex">
+
+                            <a
+                                href="{{ path('app_catalog_show', {'slug': product.slug}) }}"
+                                class="flex flex-col gap-3 w-full
+                                  focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-xl"
+                            >
+
+                                <div class="aspect-square rounded-xl overflow-hidden bg-stone-100">
+                                    {% set image = product.productImages|first %}
+                                    {% if image %}
+                                        <img
+                                            src="{{ asset('uploads/products/' ~ image.filename) }}"
+                                            alt="{{ product.name }}"
+                                            loading="lazy"
+                                            class="w-full h-full object-cover
+                                                group-hover:scale-105 transition duration-500"
+                                        >
+                                    {% else %}
+                                        <div
+                                            class="w-full h-full flex items-center justify-center
+                                                text-stone-400 text-sm"
+                                        >
+                                            Pas d'image
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="flex flex-col gap-1">
+                                    <h3
+                                        class="font-medium text-stone-900
+                                           group-hover:text-amber-800 transition"
+                                    >
+                                        {{ product.name }}
+                                    </h3>
+
+                                    <p class="text-amber-800 font-semibold">
+                                        {{ product.price|number_format(2, ',', ' ') }} €
+                                    </p>
+                                </div>
+
+                            </a>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <div class="flex justify-center">
+                    <a
+                        href="{{ path('app_catalog_index') }}"
+                        class="px-8 py-3 rounded-lg border border-stone-300
+                          text-stone-800 font-semibold hover:border-amber-500
+                          hover:text-amber-800 transition"
+                    >
+                        Voir tout le catalogue →
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════ #}
+    {#  ④ ENGAGEMENTS                                                #}
+    {# ══════════════════════════════════════════════════════════════ #}
+    <section class="max-w-7xl mx-auto px-4 py-20">
+        <div class="flex flex-wrap gap-10">
+
+            {% for item in [
+            {
+                'icon': '🔍',
+                'title': 'Authenticité garantie',
+                'text': 'Chaque pièce est expertisée et accompagnée de son certificat d\'origine.'
+            },
+            {
+                'icon': '🚚',
+                'title': 'Livraison soignée',
+                'text': 'Emballage sur mesure et transporteur spécialisé pour les pièces fragiles.'
+            },
+            {
+                'icon': '🛠️',
+                'title': 'Restauration experte',
+                'text': 'Nos ébénistes redonnent vie aux meubles dans le respect des techniques anciennes.'
+            }
+        ] %}
+                <div class="grow basis-80 flex flex-col items-center gap-3 text-center">
+                    <div class="text-4xl" aria-hidden="true">{{ item.icon }}</div>
+                    <h3 class="font-serif text-xl text-stone-900">{{ item.title }}</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">{{ item.text }}</p>
+                </div>
+            {% endfor %}
+
+        </div>
+    </section>
+
+    {# ══════════════════════════════════════════════════════════════ #}
+    {#  ⑤ CTA FINAL                                                  #}
+    {# ══════════════════════════════════════════════════════════════ #}
+    <section class="bg-stone-900 text-stone-100">
+        <div
+            class="max-w-4xl mx-auto px-4 py-16
+                    flex flex-col items-center gap-4 text-center"
+        >
+
+            <h2 class="font-serif text-3xl">Une pièce vous intéresse ?</h2>
+
+            <p class="text-stone-300">
+                Une question sur une pièce, une recherche particulière ?
+                Notre équipe vous répond sous 24 heures.
+            </p>
+
+            <div class="pt-4">
+                <a
+                    href="mailto:contact@atelier-antan.fr"
+                    class="px-8 py-3 rounded-lg bg-amber-700 text-white font-semibold
+                      hover:bg-amber-600 transition
+                      focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2
+                      focus:ring-offset-stone-900"
+                >
+                    Nous contacter
+                </a>
+            </div>
+
+        </div>
+    </section>
+
 {% endblock %}
