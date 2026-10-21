@@ -59,7 +59,12 @@ class Product
     /**
      * @var Collection<int, ProductImage>
      */
-    #[ORM\OneToMany(targetEntity: ProductImage::class, mappedBy: 'product')]
+    #[ORM\OneToMany(
+        targetEntity: ProductImage::class,
+        mappedBy: 'product',
+        cascade: ['remove'],
+        orphanRemoval: true,
+    )]
     private Collection $productImages;
 
     /**

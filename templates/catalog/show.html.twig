@@ -3,76 +3,304 @@
 {% block title %}{{ product.name }} — Atelier d'Antan{% endblock %}
 
 {% block body %}
-    <section class="max-w-7xl mx-auto px-4 py-12">
-        <h1 class="text-4xl font-serif text-stone-900 mb-6">{{ product.name }}</h1>
-        <p class="text-stone-600">{{ product.description }}</p>
-    </section>
 
-    {# ══════════ AJOUT AU PANIER ══════════ #}
-    <div class="mt-8">
+    {# Classes réutilisables #}
+    {% set labelClass = 'text-sm font-medium text-stone-700 pb-1' %}
+    {% set inputClass = 'w-24 rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-stone-900
+                     shadow-sm focus:border-amber-600 focus:ring-2 focus:ring-amber-500/30 focus:outline-none' %}
 
-        {% if product.stock < 1 %}
+    {% set images = product.productImages %}
 
-            {# ─── Épuisé ─── #}
-            <p class="inline-block px-6 py-3 rounded-lg bg-stone-200 text-stone-600 font-semibold">
-                Épuisé
-            </p>
+    <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col gap-12">
 
-        {% elseif remaining < 1 %}
+        {#  FIL D'ARIANE  #}
+        <nav
+            aria-label="Fil d'Ariane"
+            class="flex flex-wrap items-center gap-2 text-sm text-stone-500"
+        >
 
-            {# ─── Déjà tout dans le panier ─── #}
-            <p
-                class="inline-block px-6 py-3 rounded-lg bg-amber-50 border border-amber-200
-                  text-amber-800 font-medium"
-            >
-                ✅ Vous avez déjà tous les exemplaires disponibles dans votre panier.
-            </p>
-            <p class="mt-2 text-sm">
-                <a href="{{ path('app_cart_index') }}" class="text-amber-700 hover:underline">
-                    Voir mon panier →
-                </a>
-            </p>
+            <a href="{{ path('app_home') }}" class="hover:text-amber-700 transition">
+                Accueil
+            </a>
 
-        {% else %}
+            <span aria-hidden="true">/</span>
 
-            {# ─── Formulaire ─── #}
-            {{ form_start(cartForm, {
-            'attr': {'class': 'flex items-center gap-4'}
-        }) }}
+            <a href="{{ path('app_catalog_index') }}" class="hover:text-amber-700 transition">
+                Catalogue
+            </a>
 
-            <div class="flex items-center gap-2">
-                <label
-                    for="{{ cartForm.quantity.vars.id }}"
-                    class="text-sm font-medium text-stone-700"
+            <span aria-hidden="true">/</span>
+
+            <a href="{{ path('app_catalog_index') }}" class="hover:text-amber-700 transition">
+                {{ product.category.name }}
+            </a>
+
+            <span aria-hidden="true">/</span>
+
+            <span class="text-stone-900 font-medium truncate">{{ product.name }}</span>
+
+        </nav>
+
+        {#  GALERIE + INFORMATIONS  #}
+        <div class="flex flex-wrap gap-10">
+
+            {# GALERIE #}
+            <div class="grow basis-96 flex flex-col gap-4">
+
+                {# Image principale #}
+                <div
+                    class="aspect-square rounded-2xl overflow-hidden bg-stone-100
+                        border border-stone-200"
                 >
-                    Quantité
-                </label>
-                {{ form_widget(cartForm.quantity) }}
+                    {% if images|length > 0 %}
+                        <img
+                            id="gallery-main"
+                            src="{{ asset('uploads/products/' ~ images|first.filename) }}"
+                            alt="{{ product.name }}"
+                            class="w-full h-full object-cover"
+                        >
+                    {% else %}
+                        <div
+                            class="w-full h-full flex items-center justify-center
+                                text-stone-300 text-4xl"
+                            aria-hidden="true"
+                        >
+                            📦
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Vignettes #}
+                {% if images|length > 1 %}
+                    <div class="flex flex-wrap gap-3">
+                        {% for image in images %}
+                            <button
+                                type="button"
+                                data-gallery-thumb
+                                data-full="{{ asset('uploads/products/' ~ image.filename) }}"
+                                class="w-20 h-20 rounded-lg overflow-hidden bg-stone-100
+                                       border border-stone-200 cursor-pointer
+                                       {{ loop.first
+                                           ? 'ring-2 ring-amber-600'
+                                           : 'ring-1 ring-stone-200' }}
+                                       focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                aria-label="Voir le visuel {{ loop.index }} de {{ product.name }}"
+                            >
+                                <img
+                                    src="{{ asset('uploads/products/' ~ image.filename) }}"
+                                    alt=""
+                                    loading="lazy"
+                                    class="w-full h-full object-cover"
+                                >
+                            </button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
             </div>
 
-            <button
-                type="submit"
-                class="inline-flex items-center gap-2 px-6 py-3 rounded-lg
-                           bg-amber-700 text-white font-semibold
-                           hover:bg-amber-800 transition
-                           focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-            >
-                <span aria-hidden="true">🛒</span>
-                Ajouter au panier
-            </button>
+            {# INFORMATIONS #}
+            <div class="grow basis-80 flex flex-col gap-6">
 
-            {{ form_end(cartForm) }}
+                {# Catégorie #}
+                <a
+                    href="{{ path('app_catalog_index') }}"
+                    class="inline-block px-3 py-1 rounded-full bg-stone-100 text-stone-600
+                      text-xs uppercase tracking-wider hover:bg-amber-100
+                      hover:text-amber-800 transition w-fit"
+                >
+                    {{ product.category.name }}
+                </a>
 
-            <p class="mt-2 text-sm text-stone-500">
-                {{ remaining }} exemplaire{{ remaining > 1 ? 's' : '' }} encore disponible{{ remaining > 1 ? 's' : '' }}
-                {% if remaining < product.stock %}
-                    <span class="text-amber-700">
-                        ({{ product.stock - remaining }} déjà dans votre panier)
+                {# Nom #}
+                <h1 class="font-serif text-3xl lg:text-4xl text-stone-900 leading-tight">
+                    {{ product.name }}
+                </h1>
+
+                {# Prix #}
+                <div
+                    class="flex flex-wrap items-baseline gap-4
+                        border-t border-b border-stone-200 py-5"
+                >
+                    <span class="font-serif text-4xl text-stone-900">
+                        {{ product.price|number_format(2, ',', ' ') }} €
                     </span>
-                {% endif %}
-            </p>
 
-        {% endif %}
+                    {% if product.stock < 1 %}
+                        <span
+                            class="px-3 py-1 rounded-full bg-red-50 text-red-700
+                                 text-xs font-medium uppercase tracking-wider"
+                        >
+                            Épuisé
+                        </span>
+                    {% elseif product.stock <= 2 %}
+                        <span
+                            class="px-3 py-1 rounded-full bg-amber-50 text-amber-700
+                                 text-xs font-medium uppercase tracking-wider"
+                        >
+                            Dernière pièce
+                        </span>
+                    {% else %}
+                        <span
+                            class="px-3 py-1 rounded-full bg-green-50 text-green-700
+                                 text-xs font-medium uppercase tracking-wider"
+                        >
+                            Disponible
+                        </span>
+                    {% endif %}
+                </div>
+
+                {# Description courte #}
+                {% if product.description %}
+                    <p class="text-stone-600 leading-relaxed">
+                        {{ product.description }}
+                    </p>
+                {% endif %}
+
+                {# AJOUT AU PANIER #}
+                {% if product.stock < 1 %}
+
+                    <div class="rounded-lg bg-stone-100 border border-stone-200 px-6 py-5 text-center">
+                        <p class="text-sm font-medium text-stone-700">Pièce actuellement épuisée</p>
+                        <p class="text-xs text-stone-500 pt-1">
+                            Contactez-nous pour une pièce similaire.
+                        </p>
+                    </div>
+
+                {% elseif remaining is defined and remaining < 1 %}
+
+                    <div class="rounded-lg bg-green-50 border border-green-200 px-6 py-5 text-center">
+                        <p class="text-sm font-medium text-green-800">
+                            Vous avez déjà toutes les pièces disponibles dans votre panier.
+                        </p>
+                    </div>
+
+                {% else %}
+
+                    {{ form_start(cartForm, {'attr': {'class': 'flex flex-wrap items-end gap-4'}}) }}
+
+                    <div class="flex flex-col">
+                        {{ form_label(cartForm.quantity, null, {'label_attr': {'class': labelClass}}) }}
+                        {{ form_widget(cartForm.quantity, {'attr': {'class': inputClass}}) }}
+                        {{ form_errors(cartForm.quantity) }}
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="grow basis-48 bg-amber-700 text-white px-8 py-3 rounded-lg
+                                   font-semibold hover:bg-amber-800 transition
+                                   focus:outline-none focus:ring-2 focus:ring-amber-500
+                                   focus:ring-offset-2"
+                    >
+                        Ajouter au panier
+                    </button>
+
+                    {{ form_end(cartForm) }}
+
+                {% endif %}
+
+                {# Points de confiance #}
+                <ul class="flex flex-col gap-3 pt-2 text-sm text-stone-600">
+                    <li class="flex items-center gap-3">
+                        <span class="text-amber-700" aria-hidden="true">✓</span>
+                        Certificat d'authenticité fourni
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-amber-700" aria-hidden="true">✓</span>
+                        Emballage sur mesure et transport spécialisé
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-amber-700" aria-hidden="true">✓</span>
+                        Restaurée dans nos ateliers
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        {#  CARACTÉRISTIQUES #}
+        <section class="bg-white rounded-2xl border border-stone-200 p-8">
+
+            <h2 class="font-serif text-2xl text-stone-900 pb-6">
+                Caractéristiques
+            </h2>
+
+            <dl class="flex flex-wrap gap-8">
+
+                <div class="grow basis-64 flex flex-col gap-1">
+                    <dt class="text-xs uppercase tracking-wider text-stone-500">Matériau</dt>
+                    <dd class="text-stone-900">{{ product.material ?: '—' }}</dd>
+                </div>
+
+                <div class="grow basis-64 flex flex-col gap-1">
+                    <dt class="text-xs uppercase tracking-wider text-stone-500">Style</dt>
+                    <dd class="text-stone-900">{{ product.style ?: '—' }}</dd>
+                </div>
+
+                <div class="grow basis-64 flex flex-col gap-1">
+                    <dt class="text-xs uppercase tracking-wider text-stone-500">Origine</dt>
+                    <dd class="text-stone-900">{{ product.origin ?: '—' }}</dd>
+                </div>
+
+                <div class="grow basis-64 flex flex-col gap-1">
+                    <dt class="text-xs uppercase tracking-wider text-stone-500">Couleur</dt>
+                    <dd class="text-stone-900">{{ product.color ?: '—' }}</dd>
+                </div>
+
+                <div class="grow basis-64 flex flex-col gap-1">
+                    <dt class="text-xs uppercase tracking-wider text-stone-500">Dimensions</dt>
+                    <dd class="text-stone-900">{{ product.size ?: '—' }}</dd>
+                </div>
+
+                <div class="grow basis-64 flex flex-col gap-1">
+                    <dt class="text-xs uppercase tracking-wider text-stone-500">Poids</dt>
+                    <dd class="text-stone-900">{{ product.weight ?: '—' }}</dd>
+                </div>
+
+            </dl>
+
+        </section>
+
+        {#  RETOUR #}
+        <div class="flex justify-center">
+            <a
+                href="{{ path('app_catalog_index') }}"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-lg
+                  border border-stone-300 text-stone-700 font-medium
+                  hover:bg-stone-100 transition
+                  focus:outline-none focus:ring-2 focus:ring-stone-400"
+            >
+                <span aria-hidden="true">←</span>
+                Retour au catalogue
+            </a>
+        </div>
 
     </div>
+
+    {#  SCRIPT GALERIE #}
+    <script>
+        (function () {
+            const main = document.getElementById("gallery-main");
+            const thumbs = document.querySelectorAll("[data-gallery-thumb]");
+
+            if (!main || thumbs.length === 0) return;
+
+            thumbs.forEach(function (thumb) {
+                thumb.addEventListener("click", function () {
+                    main.src = thumb.dataset.full;
+
+                    thumbs.forEach(function (t) {
+                        t.classList.remove("ring-2", "ring-amber-600");
+                        t.classList.add("ring-1", "ring-stone-200");
+                    });
+
+                    thumb.classList.remove("ring-1", "ring-stone-200");
+                    thumb.classList.add("ring-2", "ring-amber-600");
+                });
+            });
+        })();
+    </script>
+
 {% endblock %}
