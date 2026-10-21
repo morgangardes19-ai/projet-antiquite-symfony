@@ -16,7 +16,7 @@
         {% endblock %}
     </head>
 
-    <body class="min-h-screen bg-stone-900 text-stone-100 font-sans antialiased">
+    <body class="min-h-screen bg-stone-300 text-stone-100 font-sans antialiased">
 
         {#  HEADER #}
         <header class="bg-stone-900 text-stone-100 sticky top-0 z-50 shadow-lg">
@@ -134,7 +134,7 @@
         {% endfor %}
 
         {#  CONTENU  #}
-        <main class="flex-1 p-8 lg:p-16">
+        <main class="min-h-screen flex-1 p-8 lg:p-16">
             {% block body %}{% endblock %}
         </main>
 
