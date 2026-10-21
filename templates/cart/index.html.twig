@@ -9,7 +9,7 @@
 
         {% if lines is empty %}
 
-            {# ══════════ PANIER VIDE ══════════ #}
+            {# PANIER VIDE #}
             <div class="bg-white rounded-xl border border-stone-200 p-12 text-center">
                 <p class="text-4xl mb-4" aria-hidden="true">🛒</p>
                 <p class="text-stone-600 mb-6">Votre panier est vide.</p>
@@ -24,7 +24,7 @@
 
         {% else %}
 
-            {# ══════════ PANIER REMPLI ══════════ #}
+            {# PANIER REMPLI #}
             <div class="bg-white rounded-xl border border-stone-200 overflow-hidden">
                 <table class="w-full text-sm">
                     <thead class="bg-stone-100 text-left text-stone-600">
@@ -43,7 +43,7 @@
                         {% for line in lines %}
                             <tr class="border-t border-stone-200">
 
-                                {# ─── Pièce ─── #}
+                                {# Pièce #}
                                 <td class="px-4 py-4">
                                     <a
                                         href="{{ path('app_catalog_show', {'slug': line.product.slug}) }}"
@@ -53,13 +53,13 @@
                                     </a>
                                 </td>
 
-                                {# ─── Prix unitaire ─── #}
-                                <td class="px-4 py-4 text-stone-600">
+                                {# Prix unitaire #}
+                                <td class="px-4 py-4 text-stone-900">
                                     {{ line.product.price|number_format(2, ',', ' ') }} €
                                 </td>
 
-                                {# ─── Quantité modifiable ─── #}
-                                <td class="px-4 py-4">
+                                {# Quantité modifiable #}
+                                <td class="px-4 py-4 text-stone-900">
                                     <form
                                         method="post"
                                         action="{{ path('app_cart_update', {'id': line.product.id}) }}"
@@ -96,12 +96,12 @@
                                     </form>
                                 </td>
 
-                                {# ─── Sous-total ─── #}
-                                <td class="px-4 py-4 text-right font-semibold">
+                                {# Sous-total #}
+                                <td class="px-4 py-4 text-stone-900 text-right font-semibold">
                                     {{ line.subtotal|number_format(2, ',', ' ') }} €
                                 </td>
 
-                                {# ─── Supprimer ─── #}
+                                {# Supprimer #}
                                 <td class="px-4 py-4 text-right">
                                     <form
                                         method="post"
