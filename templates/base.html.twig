@@ -4,9 +4,15 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{% block title %}Administration — Atelier d'Antan{% endblock %}</title>
+        <title>{% block title %}Atelier d'Antan — Antiquités & objets d'art{% endblock %}</title>
 
-        {# ⚠️ COPIE ce bloc depuis ton base.html.twig tel quel #}
+        <meta
+            name="description"
+            content="{% block meta_description %}Atelier d'Antan — meubles anciens, objets de curiosité et pièces de collection, sélectionnés avec soin et restaurés dans nos ateliers.{% endblock %}"
+        >
+
+        <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 
         {% block stylesheets %}{% endblock %}
@@ -25,7 +31,7 @@
                 aria-label="Navigation principale"
             >
 
-                {# ─── Logo ─── #}
+                {# Logo #}
                 <a
                     href="{{ path('app_home') }}"
                     class="font-serif text-xl tracking-wide hover:text-amber-400 transition
@@ -34,7 +40,7 @@
                     Atelier d'Antan
                 </a>
 
-                {# ─── Liens principaux ─── #}
+                {# Liens principaux #}
                 <ul class="hidden md:flex items-center gap-6 text-sm">
                     <li>
                         <a
@@ -50,7 +56,7 @@
                     </li>
                 </ul>
 
-                {# ─── Actions ─── #}
+                {# Actions #}
                 <ul class="flex items-center gap-3 text-sm">
 
                     {% if app.user %}  {# app.user est une variable globale Twig : null si personne n'est connecté, l'entité Utilisateur sinon #}
@@ -87,7 +93,7 @@
                         </li>
                     {% endif %}
 
-                    {# ─── PANIER ─── #}
+                    {# PANIER #}
                     {% set cartCount = cart_count() %}
                     <li>
                         <a
