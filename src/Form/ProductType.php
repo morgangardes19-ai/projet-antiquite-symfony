@@ -50,7 +50,7 @@ class ProductType extends AbstractType
             ->add('weight', TextType::class, ['label' => 'Poids'])
             ->add('price', MoneyType::class, [
                 'label'    => 'Prix',
-                'currency' => 'EUR',
+                'currency' => false,
                 'constraints' => [
                     new PositiveOrZero(message: 'Le prix ne peut pas être négatif.'),
                 ],

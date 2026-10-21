@@ -1,11 +1,72 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Product{% endblock %}
+{% block title %}Nouvelle pièce — Administration{% endblock %}
 
 {% block body %}
-    <h1>Create new Product</h1>
+    <div class="w-full max-w-4xl mx-auto flex flex-col gap-8">
 
-    {{ include('admin/product/_form.html.twig') }}
+        {# ══════════════════════════════════════════════════════════════ #}
+        {#  FIL D'ARIANE                                                 #}
+        {# ══════════════════════════════════════════════════════════════ #}
+        <nav
+            aria-label="Fil d'Ariane"
+            class="flex flex-wrap items-center gap-2 text-sm text-stone-500"
+        >
 
-    <a href="{{ path('admin_product_index') }}">back to list</a>
+            <a
+                href="{{ path('admin_dashboard') }}"
+                class="hover:text-amber-700 transition"
+            >
+                Tableau de bord
+            </a>
+
+            <span aria-hidden="true">/</span>
+
+            <a
+                href="{{ path('admin_product_index') }}"
+                class="hover:text-amber-700 transition"
+            >
+                Produits
+            </a>
+
+            <span aria-hidden="true">/</span>
+
+            <span class="text-stone-900 font-medium">Nouvelle pièce</span>
+
+        </nav>
+
+        {# ══════════════════════════════════════════════════════════════ #}
+        {#  EN-TÊTE                                                      #}
+        {# ══════════════════════════════════════════════════════════════ #}
+        <div
+            class="flex flex-wrap items-center justify-between gap-4
+                border-b border-stone-200 pb-6"
+        >
+
+            <div class="flex flex-col gap-1">
+                <h1 class="font-serif text-3xl text-stone-900">Nouvelle pièce</h1>
+                <p class="text-sm text-stone-500">
+                    Renseignez les informations de la pièce à ajouter au catalogue.
+                </p>
+            </div>
+
+            <a
+                href="{{ path('admin_product_index') }}"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+                  border border-stone-300 bg-white text-stone-700 text-sm font-medium
+                  hover:bg-stone-100 transition
+                  focus:outline-none focus:ring-2 focus:ring-stone-400"
+            >
+                <span aria-hidden="true">←</span>
+                Retour à la liste
+            </a>
+
+        </div>
+
+        {# ══════════════════════════════════════════════════════════════ #}
+        {#  FORMULAIRE                                                   #}
+        {# ══════════════════════════════════════════════════════════════ #}
+        {{ include('admin/product/_form.html.twig') }}
+
+    </div>
 {% endblock %}

@@ -121,7 +121,8 @@
         {% for type, messages in app.flashes %} {# message flash : succes : vert, error : rouge #}
             {% for message in messages %}
                 <div
-                    role="alert" {# le lecteur d'écran annonce le message dès son apparition #}
+                    role="alert"
+                    {# le lecteur d'écran annonce le message dès son apparition #}
                     class="max-w-5xl mx-auto mt-4 px-4 py-3 rounded-lg border text-sm font-medium
                     {{ type == 'success'
                         ? 'bg-green-50 border-green-200 text-green-800'
@@ -135,7 +136,7 @@
         {# ══════════════════════════════════════════════════════════════ #}
         {#  CONTENU                                                      #}
         {# ══════════════════════════════════════════════════════════════ #}
-        <main class="flex-1">
+        <main class="flex-1 p-8 lg:p-16">
             {% block body %}{% endblock %}
         </main>
 

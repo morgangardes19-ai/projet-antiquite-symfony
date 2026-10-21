@@ -1,142 +1,147 @@
 {# ── Classes Tailwind réutilisables (définies une seule fois) ── #}
 {% set inputClass = 'w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-stone-900 shadow-sm focus:border-amber-600 focus:ring-2 focus:ring-amber-500/30 focus:outline-none' %}
-{% set labelClass = 'block text-sm font-medium text-stone-700 mb-1' %}
-{% set errorClass = 'mt-1 text-sm text-red-600' %}
+{% set labelClass = 'block text-sm font-medium text-stone-700 pb-1' %}
+{% set errorClass = 'pt-1 text-sm text-red-600' %}
+{% set fieldClass = 'grow basis-72' %}
 
 {{ form_start(form, {
     'attr': {
         'enctype': 'multipart/form-data',
-        'class': 'max-w-4xl mx-auto space-y-8'
+        'class': 'max-w-4xl mx-auto flex flex-col gap-8'
     }
 }) }}
 
-    {# ═══════ 1. IDENTITÉ DE LA PIÈCE ═══════ #}
-    <fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
-        <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
-            1. Identité de la pièce
-        </legend>
+{# ═══════ 1. IDENTITÉ DE LA PIÈCE ═══════ #}
+<fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
+        1. Identité de la pièce
+    </legend>
 
-        <div class="space-y-5 mt-2">
-            <div>
-                {{ form_label(form.name, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.name, {'attr': {'class': inputClass}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.name) }}</div>
-            </div>
-
-            <div>
-                {{ form_label(form.category, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.category, {'attr': {'class': inputClass}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.category) }}</div>
-            </div>
-
-            <div>
-                {{ form_label(form.description, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.description, {'attr': {'class': inputClass, 'rows': 5}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.description) }}</div>
-                <p class="mt-1 text-xs text-stone-500">
-                    Décrivez l'état, l'époque et l'histoire de la pièce.
-                </p>
-            </div>
+    <div class="flex flex-col gap-5 pt-2">
+        <div>
+            {{ form_label(form.name, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.name, {'attr': {'class': inputClass}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.name) }}</div>
         </div>
-    </fieldset>
 
-    {# ═══════ 2. CARACTÉRISTIQUES ═══════ #}
-    <fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
-        <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
-            2. Caractéristiques
-        </legend>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
-            <div>
-                {{ form_label(form.material, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.material, {'attr': {'class': inputClass, 'placeholder': 'Chêne massif, bronze doré…'}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.material) }}</div>
-            </div>
-
-            <div>
-                {{ form_label(form.style, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.style, {'attr': {'class': inputClass, 'placeholder': 'Louis XV, Art Déco…'}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.style) }}</div>
-            </div>
-
-            <div>
-                {{ form_label(form.origin, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.origin, {'attr': {'class': inputClass, 'placeholder': 'France, Italie, Japon…'}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.origin) }}</div>
-            </div>
-
-            <div>
-                {{ form_label(form.color, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.color, {'attr': {'class': inputClass, 'placeholder': 'Beige, noir, doré…'}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.color) }}</div>
-            </div>
-
-            <div>
-                {{ form_label(form.size, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.size, {'attr': {'class': inputClass, 'placeholder': '120 × 60 × 75 cm'}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.size) }}</div>
-            </div>
-
-            <div>
-                {{ form_label(form.weight, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.weight, {'attr': {'class': inputClass, 'placeholder': '18 kg'}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.weight) }}</div>
-            </div>
+        <div>
+            {{ form_label(form.category, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.category, {'attr': {'class': inputClass}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.category) }}</div>
         </div>
-    </fieldset>
 
-    {# ═══════ 3. PRIX & STOCK ═══════ #}
-    <fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
-        <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
-            3. Prix &amp; disponibilité
-        </legend>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
-            <div>
-                {{ form_label(form.price, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.price, {'attr': {'class': inputClass}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.price) }}</div>
-                <p class="mt-1 text-xs text-stone-500">Montant en euros.</p>
-            </div>
-
-            <div>
-                {{ form_label(form.stock, null, {'label_attr': {'class': labelClass}}) }}
-                {{ form_widget(form.stock, {'attr': {'class': inputClass, 'min': 0}}) }}
-                <div class="{{ errorClass }}">{{ form_errors(form.stock) }}</div>
-                <p class="mt-1 text-xs text-stone-500">Pour une pièce unique, laissez <strong>1</strong>.</p>
-            </div>
-        </div>
-    </fieldset>
-
-    {# ═══════ 4. PHOTOS ═══════ #}
-    <fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
-        <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
-            4. Photographies
-        </legend>
-
-        <div class="mt-2">
-            {{ form_label(form.imageFiles, null, {'label_attr': {'class': labelClass}}) }}
-            {{ form_widget(form.imageFiles, {'attr': {'class': 'block w-full text-sm text-stone-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-700 file:text-white file:font-medium hover:file:bg-amber-800 file:cursor-pointer cursor-pointer'}}) }}
-            <div class="{{ errorClass }}">{{ form_errors(form.imageFiles) }}</div>
-            <p class="mt-2 text-xs text-stone-500">
-                Formats acceptés : JPG, PNG, WebP — 2 Mo maximum par image.
+        <div>
+            {{ form_label(form.description, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.description, {'attr': {'class': inputClass, 'rows': 5}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.description) }}</div>
+            <p class="pt-1 text-xs text-stone-500">
+                Décrivez l'état, l'époque et l'histoire de la pièce.
             </p>
         </div>
-    </fieldset>
-
-    {# ═══════ BOUTONS ═══════ #}
-    <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
-        <a href="{{ path('admin_product_index') }}"
-           class="px-6 py-3 rounded-lg text-center text-stone-700 border border-stone-300 bg-white
-                  hover:bg-stone-100 transition focus:outline-none focus:ring-2 focus:ring-stone-400">
-            Annuler
-        </a>
-
-        <button type="submit"
-                class="bg-amber-700 text-white px-8 py-3 rounded-lg font-medium
-                       hover:bg-amber-800 transition focus:outline-none focus:ring-2 focus:ring-amber-500">
-            Enregistrer la pièce
-        </button>
     </div>
+</fieldset>
+
+{# ═══════ 2. CARACTÉRISTIQUES ═══════ #}
+<fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
+        2. Caractéristiques
+    </legend>
+
+    <div class="flex flex-wrap gap-5 pt-2">
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.material, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.material, {'attr': {'class': inputClass, 'placeholder': 'Chêne massif, bronze doré…'}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.material) }}</div>
+        </div>
+
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.style, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.style, {'attr': {'class': inputClass, 'placeholder': 'Louis XV, Art Déco…'}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.style) }}</div>
+        </div>
+
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.origin, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.origin, {'attr': {'class': inputClass, 'placeholder': 'France, Italie, Japon…'}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.origin) }}</div>
+        </div>
+
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.color, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.color, {'attr': {'class': inputClass, 'placeholder': 'Beige, noir, doré…'}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.color) }}</div>
+        </div>
+
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.size, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.size, {'attr': {'class': inputClass, 'placeholder': '120 × 60 × 75 cm'}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.size) }}</div>
+        </div>
+
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.weight, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.weight, {'attr': {'class': inputClass, 'placeholder': '18 kg'}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.weight) }}</div>
+        </div>
+    </div>
+</fieldset>
+
+{# ═══════ 3. PRIX & STOCK ═══════ #}
+<fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
+        3. Prix &amp; disponibilité
+    </legend>
+
+    <div class="flex flex-wrap gap-5 pt-2">
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.price, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.price, {'attr': {'class': inputClass}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.price) }}</div>
+            <p class="pt-1 text-xs text-stone-500">Montant en euros.</p>
+        </div>
+
+        <div class="{{ fieldClass }}">
+            {{ form_label(form.stock, null, {'label_attr': {'class': labelClass}}) }}
+            {{ form_widget(form.stock, {'attr': {'class': inputClass, 'min': 0}}) }}
+            <div class="{{ errorClass }}">{{ form_errors(form.stock) }}</div>
+            <p class="pt-1 text-xs text-stone-500">Pour une pièce unique, laissez <strong>1</strong>.</p>
+        </div>
+    </div>
+</fieldset>
+
+{# ═══════ 4. PHOTOS ═══════ #}
+<fieldset class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <legend class="px-3 text-lg font-serif font-semibold text-stone-900">
+        4. Photographies
+    </legend>
+
+    <div class="pt-2">
+        {{ form_label(form.imageFiles, null, {'label_attr': {'class': labelClass}}) }}
+        {{ form_widget(form.imageFiles, {'attr': {'class': 'block w-full text-sm text-stone-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-700 file:text-white file:font-medium hover:file:bg-amber-800 file:cursor-pointer cursor-pointer'}}) }}
+        <div class="{{ errorClass }}">{{ form_errors(form.imageFiles) }}</div>
+        <p class="pt-2 text-xs text-stone-500">
+            Formats acceptés : JPG, PNG, WebP — 2 Mo maximum par image.
+        </p>
+    </div>
+</fieldset>
+
+{# ═══════ BOUTONS ═══════ #}
+<div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
+    <a
+        href="{{ path('admin_product_index') }}"
+        class="px-6 py-3 rounded-lg text-center text-stone-700 border border-stone-300 bg-white
+                  hover:bg-stone-100 transition focus:outline-none focus:ring-2 focus:ring-stone-400"
+    >
+        Annuler
+    </a>
+
+    <button
+        type="submit"
+        class="bg-amber-700 text-white px-8 py-3 rounded-lg font-medium
+                       hover:bg-amber-800 transition focus:outline-none focus:ring-2 focus:ring-amber-500"
+    >
+        Enregistrer la pièce
+    </button>
+</div>
 
 {{ form_end(form) }}
