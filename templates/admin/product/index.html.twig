@@ -155,6 +155,16 @@
                                         <div class="flex items-center justify-end gap-1">
 
                                             <a
+                                                href="{{ path('admin_product_show', {'id': product.id}) }}"
+                                                class="p-2 rounded-lg text-stone-500
+          hover:bg-stone-100 hover:text-amber-700 transition
+          focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                                aria-label="Voir {{ product.name }}"
+                                            >
+                                                <span aria-hidden="true">👁️</span>
+                                            </a>
+
+                                            <a
                                                 href="{{ path('admin_product_edit', {'id': product.id}) }}"
                                                 class="p-2 rounded-lg text-stone-500
                                                   hover:bg-stone-100 hover:text-amber-700 transition

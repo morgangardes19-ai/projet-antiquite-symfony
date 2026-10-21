@@ -7,18 +7,16 @@
     <h1 class="text-3xl font-serif text-stone-900 mb-2">Tableau de bord</h1>
     <p class="text-stone-600 mb-8">Vue d'ensemble de l'activité de l'atelier.</p>
 
-    {# ══════════════════════════════════════════════════
-       1. LES 4 CARTES D'INDICATEURS
-       ══════════════════════════════════════════════════ #}
+    {# 1. LES 4 CARTES D'INDICATEURS #}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
 
-        {# ── Carte 1 : nombre de pièces ── #}
+        {# Carte 1 : nombre de pièces #}
         <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
             <p class="text-xs uppercase tracking-wider text-stone-500">Pièces au catalogue</p>
             <p class="text-4xl font-bold text-amber-700 mt-2">{{ totalProducts }}</p>
         </article>
 
-        {# ── Carte 2 : valeur du stock ── #}
+        {# Carte 2 : valeur du stock #}
         <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
             <p class="text-xs uppercase tracking-wider text-stone-500">Valeur du stock</p>
             <p class="text-3xl font-bold text-amber-700 mt-2">
@@ -26,13 +24,13 @@
             </p>
         </article>
 
-        {# ── Carte 3 : nombre de commandes ── #}
+        {# Carte 3 : nombre de commandes #}
         <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
             <p class="text-xs uppercase tracking-wider text-stone-500">Commandes</p>
             <p class="text-4xl font-bold text-amber-700 mt-2">{{ totalOrders }}</p>
         </article>
 
-        {# ── Carte 4 : nombre de clients ── #}
+        {# Carte 4 : nombre de clients #}
         <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
             <p class="text-xs uppercase tracking-wider text-stone-500">Clients inscrits</p>
             <p class="text-4xl font-bold text-amber-700 mt-2">{{ totalCustomers }}</p>
@@ -40,9 +38,7 @@
 
     </div>
 
-    {# ══════════════════════════════════════════════════
-       2. LES ALERTES DE STOCK
-       ══════════════════════════════════════════════════ #}
+    {# 2. LES ALERTES DE STOCK #}
     <h2 class="text-xl font-semibold text-stone-900 mb-4">Alertes de stock</h2>
 
     {% if lowStock is empty %}
@@ -66,9 +62,7 @@
         </ul>
     {% endif %}
 
-    {# ══════════════════════════════════════════════════
-       3. LES ACCÈS RAPIDES
-       ══════════════════════════════════════════════════ #}
+    {# 3. LES ACCÈS RAPIDES #}
     <div class="flex flex-wrap gap-4 mt-10">
 
         <a href="{{ path('admin_product_new') }}"
