@@ -76,10 +76,38 @@ final class CategoryController extends AbstractController
     #[Route('/{id}', name: 'admin_category_delete', methods: ['POST'])]
     public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($category);
-            $entityManager->flush();
+        // Vérifier le jeton CSRF - on refuse au lieu d'ignorer silencieusement
+        if (!$this->isCsrfTokenValid(
+            'delete' . $category->getId(),
+            $request->getPayload()->getString('_token')
+        )) {
+            throw $this->createAccessDeniedException('Jeton de sécurité invalide.');
         }
+
+        // La catégorie contient-elle des pièces ? On refuse.
+        $productCount = $category->getProducts()->count();
+
+        if ($productCount > 0) {
+            $this->addFlash('danger', sprintf(
+                'Impossible de supprimer « %s » : %d pièce%s y %s rattachée%s.',
+                $category->getName(),
+                $productCount,
+                $productCount > 1 ? 's' : '',
+                $productCount > 1 ? 'sont' : 'est',
+                $productCount > 1 ? 's' : ''
+            ));
+
+            return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        // La catégorie est vide => suppression
+        $entityManager->remove($category);
+        $entityManager->flush();
+
+        $this->addFlash('success', sprintf(
+            'La catégorie « %s » a bien été supprimée.',
+            $category->getName()
+        ));
 
         return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
     }
