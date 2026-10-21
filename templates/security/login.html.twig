@@ -1,46 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion — Administration{% endblock %}
+{% block title %}Connexion — Atelier d'Antan{% endblock %}
 
 {% block body %}
 
     {# ── Classes Tailwind réutilisables ── #}
-    {% set inputClass = 'w-full rounded-lg border border-stone-600 bg-stone-800 px-3 py-2.5
-                     text-stone-100 placeholder-stone-500 shadow-sm
-                     focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none' %}
-    {% set labelClass = 'text-sm font-medium text-stone-300 pb-1' %}
+    {% set inputClass = 'w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-stone-900 shadow-sm focus:border-amber-600 focus:ring-2 focus:ring-amber-500/30 focus:outline-none' %}
+    {% set labelClass = 'text-sm font-medium text-stone-700 pb-1' %}
 
-    <div class="min-h-screen flex">
+    <section class="bg-stone-900">
+        <div class="max-w-xl mx-auto px-4 py-16 lg:py-24">
 
-        {#  FORMULAIRE  #}
-        <div class="grow basis-80 lg:basis-0 flex items-center justify-center p-6 lg:p-12">
+            <div
+                class="bg-white rounded-2xl border border-stone-200 shadow-sm
+                    p-8 lg:p-10 flex flex-col gap-8"
+            >
 
-            <div class="w-full max-w-md flex flex-col gap-8">
+                {#  EN-TÊTE DE LA CARTE #}
+                <div class="flex flex-col gap-2 text-center">
 
-                {# Mobile : marque #}
-                <div class="flex flex-col gap-1 lg:hidden">
-                    <span class="font-serif text-2xl text-stone-100">Atelier d'Antan</span>
-                    <span class="text-xs tracking-[0.3em] uppercase text-amber-500">
-                        Administration
+                    <span class="text-amber-700 text-xs tracking-[0.3em] uppercase">
+                        Atelier d'Antan
                     </span>
+
+                    <h1 class="font-serif text-3xl text-stone-900">Connexion</h1>
+
                 </div>
 
-                {# Titre #}
-                <div class="flex flex-col gap-2">
-                    <h1 class="font-serif text-3xl text-stone-100">Connexion</h1>
-                    <p class="text-sm text-stone-400">
-                        Veuillez vous identifier.
-                    </p>
-                </div>
-
-                {# FORMULAIRE #}
+                {#  FORMULAIRE  #}
                 <form method="post" class="flex flex-col gap-5">
 
                     {# Erreur d'authentification #}
                     {% if error %}
                         <div
-                            class="rounded-lg border border-red-800 bg-red-950/50 px-4 py-3
-                                text-sm text-red-300"
+                            class="rounded-lg border border-red-200 bg-red-50 px-4 py-3
+                                text-sm text-red-700"
                         >
                             {{ error.messageKey|trans(error.messageData, 'security') }}
                         </div>
@@ -49,14 +43,14 @@
                     {# Déjà connecté #}
                     {% if app.user %}
                         <div
-                            class="rounded-lg border border-stone-700 bg-stone-800 px-4 py-3
-                                text-sm text-stone-300"
+                            class="rounded-lg border border-stone-200 bg-stone-50 px-4 py-3
+                                text-sm text-stone-600"
                         >
                             Vous êtes connecté en tant que
-                            <strong>{{ app.user.userIdentifier }}</strong>.
+                            <strong class="text-stone-900">{{ app.user.userIdentifier }}</strong>.
                             <a
                                 href="{{ path('app_logout') }}"
-                                class="text-amber-500 font-medium hover:text-amber-400 transition"
+                                class="text-amber-700 font-medium hover:text-amber-800 transition"
                             >
                                 Se déconnecter
                             </a>
@@ -81,7 +75,17 @@
 
                     {# Mot de passe #}
                     <div class="flex flex-col">
-                        <label for="password" class="{{ labelClass }}">Mot de passe</label>
+                        <div class="flex flex-wrap items-baseline justify-between gap-2 pb-1">
+                            <label for="password" class="text-sm font-medium text-stone-700">
+                                Mot de passe
+                            </label>
+                            <a
+                                href="#"
+                                class="text-xs text-stone-500 hover:text-amber-700 transition"
+                            >
+                                Mot de passe oublié ?
+                            </a>
+                        </div>
                         <input
                             type="password"
                             name="_password"
@@ -94,14 +98,14 @@
                     </div>
 
                     {# Se souvenir #}
-                    <label class="flex items-center gap-3 text-sm text-stone-300 cursor-pointer">
+                    <label class="flex items-center gap-3 text-sm text-stone-600 cursor-pointer">
                         <input
                             type="checkbox"
                             name="_remember_me"
-                            class="w-4 h-4 shrink-0 rounded border-stone-600 bg-stone-800
-                                  text-amber-600 focus:ring-2 focus:ring-amber-500/30"
+                            class="w-4 h-4 shrink-0 rounded border-stone-300
+                                  text-amber-700 focus:ring-2 focus:ring-amber-500/30"
                         >
-                        Se souvenir de moi
+                        Rester connecté sur cet appareil
                     </label>
 
                     {# Jeton CSRF #}
@@ -111,30 +115,28 @@
                     <button
                         type="submit"
                         class="w-full bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold
-                               hover:bg-amber-600 transition
-                               focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2
-                               focus:ring-offset-stone-900"
+                               hover:bg-amber-800 transition
+                               focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
                     >
                         Se connecter
                     </button>
 
                 </form>
 
-                {# RETOUR BOUTIQUE #}
-                <div class="border-t border-stone-700 pt-6 text-center text-sm text-stone-400">
+                {#  LIEN VERS L'INSCRIPTION #}
+                <div class="border-t border-stone-200 pt-6 text-center text-sm text-stone-500">
+                    Pas encore de compte ?
                     <a
-                        href="{{ path('app_home') }}"
-                        class="inline-flex items-center gap-2 hover:text-amber-500 transition"
+                        href="{{ path('app_register') }}"
+                        class="text-amber-700 font-medium hover:text-amber-800 transition"
                     >
-                        <span aria-hidden="true">←</span>
-                        Retour à la boutique
+                        Créer un compte
                     </a>
                 </div>
 
             </div>
 
         </div>
-
-    </div>
+    </section>
 
 {% endblock %}
