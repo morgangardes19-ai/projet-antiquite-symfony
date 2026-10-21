@@ -1,85 +1,148 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Créer un compte — Atelier d'Antan{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
+    {# Classes Tailwind réutilisables #}
+    {% set inputClass = 'w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-stone-900 shadow-sm focus:border-amber-600 focus:ring-2 focus:ring-amber-500/30 focus:outline-none' %}
+    {% set labelClass = 'text-sm font-medium text-stone-700 pb-1' %}
+    {% set errorClass = 'pt-1 text-sm text-red-600' %}
 
-    {{ form_start(registrationForm) }}
-    <div class="patati">
+    <section class="bg-stone-900">
+        <div class="max-w-xl mx-auto px-4 py-16 lg:py-24">
 
-        {{ form_label(registrationForm.email, "Adresse mail", {
-            'label_attr': {
-                "class": "ddiusqf"
-            }
+            <div
+                class="bg-white rounded-2xl border border-stone-200 shadow-sm
+                    p-8 lg:p-10 flex flex-col gap-8"
+            >
+
+                {#  EN-TÊTE DE LA CARTE  #}
+                <div class="flex flex-col gap-2 text-center">
+
+                    <span class="text-amber-700 text-xs tracking-[0.3em] uppercase">
+                        Atelier d'Antan
+                    </span>
+
+                    <h1 class="font-serif text-3xl text-stone-900">Créer un compte</h1>
+
+                </div>
+
+                {#  FORMULAIRE  #}
+                {{ form_start(registrationForm, {
+                'attr': {'class': 'flex flex-col gap-5'}
+            }) }}
+
+                {# Prénom + Nom #}
+                <div class="flex flex-wrap gap-5">
+
+                    <div class="grow basis-40 flex flex-col">
+                        {{ form_label(registrationForm.firstname, null, {'label_attr': {'class': labelClass}}) }}
+                        {{ form_widget(registrationForm.firstname, {'attr': {'class': inputClass, 'placeholder': 'John'}}) }}
+                        <div class="{{ errorClass }}">{{ form_errors(registrationForm.firstname) }}</div>
+                    </div>
+
+                    <div class="grow basis-40 flex flex-col">
+                        {{ form_label(registrationForm.lastname, null, {'label_attr': {'class': labelClass}}) }}
+                        {{ form_widget(registrationForm.lastname, {'attr': {'class': inputClass, 'placeholder': 'Doe'}}) }}
+                        <div class="{{ errorClass }}">{{ form_errors(registrationForm.lastname) }}</div>
+                    </div>
+
+                </div>
+
+                {# E-mail #}
+                <div class="flex flex-col">
+                    {{ form_label(registrationForm.email, null, {'label_attr': {'class': labelClass}}) }}
+                    {{ form_widget(registrationForm.email, {'attr': {'class': inputClass, 'placeholder': 'vous@exemple.fr'}}) }}
+                    <div class="{{ errorClass }}">{{ form_errors(registrationForm.email) }}</div>
+                    <p class="pt-1 text-xs text-stone-500">
+                        Il servira d'identifiant de connexion.
+                    </p>
+                </div>
+
+                {# Mot de passe #}
+                <div class="flex flex-col gap-5">
+
+                    {# Erreur globale : « les mots de passe ne correspondent pas » #}
+                    {% if registrationForm.plainPassword.vars.errors|length %}
+                        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+                            {{ form_errors(registrationForm.plainPassword) }}
+                        </div>
+                    {% endif %}
+
+                    {# Mot de passe #}
+                    <div class="flex flex-col">
+                        {{ form_label(registrationForm.plainPassword.first, null, {
+            'label_attr': {'class': labelClass}
         }) }}
-
-        {{ form_widget(registrationForm.email, {
-            'attr': {
-                "class": "hgfydrt"
-            }
+                        {{ form_widget(registrationForm.plainPassword.first, {
+            'attr': {'class': inputClass, 'placeholder': '••••••••'}
         }) }}
+                        <div class="{{ errorClass }}">{{ form_errors(registrationForm.plainPassword.first) }}</div>
+                    </div>
 
-    </div>
-        
-    <div>
+                    {# Confirmation #}
+                    <div class="flex flex-col">
+                        {{ form_label(registrationForm.plainPassword.second, null, {
+            'label_attr': {'class': labelClass}
+        }) }}
+                        {{ form_widget(registrationForm.plainPassword.second, {
+            'attr': {'class': inputClass, 'placeholder': '••••••••'}
+        }) }}
+                        <div class="{{ errorClass }}">{{ form_errors(registrationForm.plainPassword.second) }}</div>
+                    </div>
 
-        {{ form_label(registrationForm.plainPassword.first) }}
+                    <p class="text-xs text-stone-500">
+                        8 caractères minimum. Évitez les mots courants.
+                    </p>
 
-        {{ form_widget(registrationForm.plainPassword.first) }}
+                </div>
 
-    </div>
+                {# Conditions (si le champ existe) #}
+                {% if registrationForm.agreeTerms is defined %}
+                    <div class="flex items-start gap-3 rounded-lg bg-stone-50 p-4">
 
-    <div>
+                        {{ form_widget(registrationForm.agreeTerms, {
+                            'attr': {'class': 'w-4 h-4 shrink-0 mt-0.5 rounded border-stone-300
+                                               text-amber-700 focus:ring-2 focus:ring-amber-500/30'}
+                        }) }}
 
-        {{ form_label(registrationForm.plainPassword.second) }}
+                        <div class="flex flex-col gap-1">
+                            {{ form_label(registrationForm.agreeTerms, null, {
+                                'label_attr': {'class': 'text-sm text-stone-700'}
+                            }) }}
+                            <div class="{{ errorClass }}">{{ form_errors(registrationForm.agreeTerms) }}</div>
+                        </div>
 
-        {{ form_widget(registrationForm.plainPassword.second) }}
+                    </div>
+                {% endif %}
 
-    </div>
-    <div style="color: red;">
-        {{ form_errors(registrationForm.plainPassword.first) }}
-    </div>
+                {# Bouton #}
+                <button
+                    type="submit"
+                    class="w-full bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold
+                               hover:bg-amber-800 transition
+                               focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                >
+                    Créer mon compte
+                </button>
 
-    <div>
+                {{ form_end(registrationForm) }}
 
-        {{ form_label(registrationForm.firstname, "Prénom") }}
+                {#  LIEN VERS LA CONNEXION #}
+                <div class="border-t border-stone-200 pt-6 text-center text-sm text-stone-500">
+                    Déjà un compte ?
+                    <a
+                        href="{{ path('app_login') }}"
+                        class="text-amber-700 font-medium hover:text-amber-800 transition"
+                    >
+                        Se connecter
+                    </a>
+                </div>
 
-        {{ form_widget(registrationForm.firstname) }}
+            </div>
 
-    </div>
-    <div style="color: red;">
-        {{ form_errors(registrationForm.firstname) }}
-    </div>
+        </div>
+    </section>
 
-    <div>
-
-        {{ form_label(registrationForm.lastname, "Nom") }}
-
-        {{ form_widget(registrationForm.lastname) }}
-
-    </div>
-    <div style="color: red;">
-        {{ form_errors(registrationForm.lastname) }}
-    </div>
-
-   
-
-    <div>
-
-        {{ form_label(registrationForm.agreeTerms, "Accepter les conditions d'utilisation") }}
-
-        {{ form_widget(registrationForm.agreeTerms) }}
-
-    </div>
-
-  
-
-    <button type="submit" class="">Register</button>
-
-    
-    
-    {{ form_end(registrationForm) }}
 {% endblock %}

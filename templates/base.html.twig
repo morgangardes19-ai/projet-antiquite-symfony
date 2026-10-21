@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full">
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Atelier d'Antan{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% block title %}Administration — Atelier d'Antan{% endblock %}</title>
+
+        {# ⚠️ COPIE ce bloc depuis ton base.html.twig tel quel #}
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 
         {% block stylesheets %}{% endblock %}
 
@@ -12,7 +16,7 @@
         {% endblock %}
     </head>
 
-    <body class="h-full bg-stone-50 text-stone-900 flex flex-col">
+    <body class="min-h-screen bg-stone-900 text-stone-100 font-sans antialiased">
 
         {#  HEADER #}
         <header class="bg-stone-900 text-stone-100 sticky top-0 z-50 shadow-lg">

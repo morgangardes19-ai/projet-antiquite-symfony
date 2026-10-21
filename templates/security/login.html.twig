@@ -1,38 +1,140 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Connexion — Administration{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Déconnexion</a>
+    {# ── Classes Tailwind réutilisables ── #}
+    {% set inputClass = 'w-full rounded-lg border border-stone-600 bg-stone-800 px-3 py-2.5
+                     text-stone-100 placeholder-stone-500 shadow-sm
+                     focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 focus:outline-none' %}
+    {% set labelClass = 'text-sm font-medium text-stone-300 pb-1' %}
+
+    <div class="min-h-screen flex">
+
+        {#  FORMULAIRE  #}
+        <div class="grow basis-80 lg:basis-0 flex items-center justify-center p-6 lg:p-12">
+
+            <div class="w-full max-w-md flex flex-col gap-8">
+
+                {# Mobile : marque #}
+                <div class="flex flex-col gap-1 lg:hidden">
+                    <span class="font-serif text-2xl text-stone-100">Atelier d'Antan</span>
+                    <span class="text-xs tracking-[0.3em] uppercase text-amber-500">
+                        Administration
+                    </span>
+                </div>
+
+                {# Titre #}
+                <div class="flex flex-col gap-2">
+                    <h1 class="font-serif text-3xl text-stone-100">Connexion</h1>
+                    <p class="text-sm text-stone-400">
+                        Veuillez vous identifier.
+                    </p>
+                </div>
+
+                {# FORMULAIRE #}
+                <form method="post" class="flex flex-col gap-5">
+
+                    {# Erreur d'authentification #}
+                    {% if error %}
+                        <div
+                            class="rounded-lg border border-red-800 bg-red-950/50 px-4 py-3
+                                text-sm text-red-300"
+                        >
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    {# Déjà connecté #}
+                    {% if app.user %}
+                        <div
+                            class="rounded-lg border border-stone-700 bg-stone-800 px-4 py-3
+                                text-sm text-stone-300"
+                        >
+                            Vous êtes connecté en tant que
+                            <strong>{{ app.user.userIdentifier }}</strong>.
+                            <a
+                                href="{{ path('app_logout') }}"
+                                class="text-amber-500 font-medium hover:text-amber-400 transition"
+                            >
+                                Se déconnecter
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    {# E-mail #}
+                    <div class="flex flex-col">
+                        <label for="username" class="{{ labelClass }}">Adresse e-mail</label>
+                        <input
+                            type="email"
+                            value="{{ last_username }}"
+                            name="_username"
+                            id="username"
+                            autocomplete="email"
+                            placeholder="vous@exemple.fr"
+                            required
+                            autofocus
+                            class="{{ inputClass }}"
+                        >
+                    </div>
+
+                    {# Mot de passe #}
+                    <div class="flex flex-col">
+                        <label for="password" class="{{ labelClass }}">Mot de passe</label>
+                        <input
+                            type="password"
+                            name="_password"
+                            id="password"
+                            autocomplete="current-password"
+                            placeholder="••••••••"
+                            required
+                            class="{{ inputClass }}"
+                        >
+                    </div>
+
+                    {# Se souvenir #}
+                    <label class="flex items-center gap-3 text-sm text-stone-300 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="_remember_me"
+                            class="w-4 h-4 shrink-0 rounded border-stone-600 bg-stone-800
+                                  text-amber-600 focus:ring-2 focus:ring-amber-500/30"
+                        >
+                        Se souvenir de moi
+                    </label>
+
+                    {# Jeton CSRF #}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    {# Bouton #}
+                    <button
+                        type="submit"
+                        class="w-full bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold
+                               hover:bg-amber-600 transition
+                               focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2
+                               focus:ring-offset-stone-900"
+                    >
+                        Se connecter
+                    </button>
+
+                </form>
+
+                {# RETOUR BOUTIQUE #}
+                <div class="border-t border-stone-700 pt-6 text-center text-sm text-stone-400">
+                    <a
+                        href="{{ path('app_home') }}"
+                        class="inline-flex items-center gap-2 hover:text-amber-500 transition"
+                    >
+                        <span aria-hidden="true">←</span>
+                        Retour à la boutique
+                    </a>
+                </div>
+
             </div>
-        {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Mot de passe</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+        </div>
 
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
+    </div>
 
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
-            </div>
-        #}
-
-        <button class="btn btn-lg btn-primary" type="submit">
-            Connexion
-        </button>
-    </form>
 {% endblock %}
