@@ -53,6 +53,7 @@
 
     {# CATÉGORIES #}
     <section id="categories" class="max-w-7xl mx-auto px-4 py-20">
+
         <div class="flex flex-col gap-12">
 
             <div class="flex flex-col gap-3 text-center">
@@ -62,11 +63,12 @@
                 <p class="text-stone-600">Explorez notre collection par univers</p>
             </div>
 
-            <div class="flex flex-wrap gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
                 {% for category in categories %}
                     <a
                         href="{{ path('app_catalog_index') }}"
-                        class="group grow basis-80 flex flex-col gap-3
+                        class="group flex flex-col gap-3
                           bg-white rounded-xl border border-stone-200 p-8
                           hover:border-amber-400 hover:shadow-lg transition
                           focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -86,16 +88,21 @@
                         <span class="text-sm text-amber-700 font-medium">
                             Explorer →
                         </span>
+
                     </a>
                 {% endfor %}
+
             </div>
 
         </div>
+
     </section>
 
     {# NOUVEAUTÉS #}
     <section class="bg-white border-y border-stone-200 rounded-md">
+
         <div class="max-w-7xl mx-auto px-4 py-20">
+
             <div class="flex flex-col gap-12">
 
                 <div class="flex flex-col gap-3 text-center">
@@ -105,9 +112,10 @@
                     <p class="text-stone-600">Les pièces qui viennent d'entrer à l'atelier</p>
                 </div>
 
-                <div class="flex flex-wrap gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
                     {% for product in featured %}
-                        <article class="group grow basis-72 flex">
+                        <article class="group flex">
 
                             <a
                                 href="{{ path('app_catalog_show', {'slug': product.slug}) }}"
@@ -142,15 +150,16 @@
                                     >
                                         {{ product.name }}
                                     </h3>
-
                                     <p class="text-amber-800 font-semibold">
                                         {{ product.price|number_format(2, ',', ' ') }} €
                                     </p>
                                 </div>
 
                             </a>
+
                         </article>
                     {% endfor %}
+
                 </div>
 
                 <div class="flex justify-center">
@@ -165,12 +174,15 @@
                 </div>
 
             </div>
+
         </div>
+
     </section>
 
     {# ENGAGEMENTS #}
     <section class="max-w-7xl mx-auto px-4 py-20">
-        <div class="flex flex-wrap gap-10">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
             {% for item in [
             {
@@ -189,14 +201,17 @@
                 'text': 'Nos ébénistes redonnent vie aux meubles dans le respect des techniques anciennes.'
             }
         ] %}
-                <div class="grow basis-80 flex flex-col items-center gap-3 text-center">
+
+                <div class="flex flex-col items-center gap-3 text-center">
                     <div class="text-4xl" aria-hidden="true">{{ item.icon }}</div>
                     <h3 class="font-serif text-xl text-stone-900">{{ item.title }}</h3>
                     <p class="text-sm text-stone-600 leading-relaxed">{{ item.text }}</p>
                 </div>
+
             {% endfor %}
 
         </div>
+
     </section>
 
     {# CTA FINAL #}
