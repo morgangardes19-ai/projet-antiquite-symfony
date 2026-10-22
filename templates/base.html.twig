@@ -24,10 +24,11 @@
 
     <body class="min-h-screen bg-stone-300 text-stone-100 font-sans antialiased">
 
-        {#  HEADER #}
+        {# HEADER #}
         <header class="bg-stone-900 text-stone-100 sticky top-0 z-50 shadow-lg">
+
             <nav
-                class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-6"
+                class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4"
                 aria-label="Navigation principale"
             >
 
@@ -35,92 +36,224 @@
                 <a
                     href="{{ path('app_home') }}"
                     class="font-serif text-xl tracking-wide hover:text-amber-400 transition
-                  focus:outline-none focus:ring-2 focus:ring-amber-500 rounded"
+                  focus:outline-none focus:ring-2 focus:ring-amber-500 rounded shrink-0"
                 >
                     Atelier d'Antan
                 </a>
 
-                {# Liens principaux #}
+                {# Liens principaux - desktop #}
                 <ul class="hidden md:flex items-center gap-6 text-sm">
                     <li>
-                        <a
-                            href="{{ path('app_home') }}"
-                            class="hover:text-amber-400 transition"
-                        >Accueil</a>
+                        <a href="{{ path('app_home') }}" class="hover:text-amber-400 transition">
+                            Accueil
+                        </a>
                     </li>
                     <li>
-                        <a
-                            href="{{ path('app_catalog_index') }}"
-                            class="hover:text-amber-400 transition"
-                        >Catalogue</a>
+                        <a href="{{ path('app_catalog_index') }}" class="hover:text-amber-400 transition">
+                            Catalogue
+                        </a>
                     </li>
                 </ul>
 
                 {# Actions #}
-                <ul class="flex items-center gap-3 text-sm">
+                <div class="flex items-center gap-2">
 
-                    {% if app.user %}  {# app.user est une variable globale Twig : null si personne n'est connecté, l'entité Utilisateur sinon #}
-                        {% if is_granted('ROLE_ADMIN') %}
+                    {# Authentification - desktop uniquement #}
+                    <ul class="hidden md:flex items-center gap-3 text-sm">
+
+                        {% if app.user %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li>
+                                    <a
+                                        href="{{ path('admin_dashboard') }}"
+                                        class="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 transition"
+                                    >
+                                        Admin
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="{{ path('app_logout') }}" class="hover:text-amber-400 transition">
+                                    Déconnexion
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ path('app_login') }}" class="hover:text-amber-400 transition">
+                                    Connexion
+                                </a>
+                            </li>
                             <li>
                                 <a
-                                    href="{{ path('admin_dashboard') }}"
-                                    class="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 transition"
+                                    href="{{ path('app_register') }}"
+                                    class="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-600 transition"
                                 >
-                                    Admin
+                                    Inscription
                                 </a>
                             </li>
                         {% endif %}
-                        <li>
-                            <a
-                                href="{{ path('app_logout') }}"
-                                class="hover:text-amber-400 transition"
-                            >Déconnexion</a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <a
-                                href="{{ path('app_login') }}"
-                                class="hover:text-amber-400 transition"
-                            >Connexion</a>
-                        </li>
-                        <li>
-                            <a
-                                href="{{ path('app_register') }}"
-                                class="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-600 transition"
-                            >
-                                Inscription
-                            </a>
-                        </li>
-                    {% endif %}
 
-                    {# PANIER #}
+                    </ul>
+
+                    {# Panier - toujours visible #}
                     {% set cartCount = cart_count() %}
+                    <a
+                        href="{{ path('app_cart_index') }}"
+                        class="relative inline-flex items-center p-2 rounded-lg
+                      hover:bg-stone-800 transition
+                      focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        aria-label="Voir mon panier{% if cartCount > 0 %} ({{ cartCount }} article{{ cartCount > 1 ? 's' : '' }}){% endif %}"
+                    >
+
+                        <span aria-hidden="true" class="text-xl">🛒</span>
+
+                        {% if cartCount > 0 %}
+                            <span
+                                aria-hidden="true"
+                                class="absolute -top-1 -right-1 min-w-5 h-5 px-1
+                                 rounded-full bg-amber-600 text-white text-xs font-bold
+                                 flex items-center justify-center"
+                            >
+                                {{ cartCount }}
+                            </span>
+                        {% endif %}
+
+                    </a>
+
+                    {# Burger - mobile uniquement #}
+                    <button
+                        type="button"
+                        id="menu-toggle"
+                        class="md:hidden p-2 rounded-lg hover:bg-stone-800 transition
+                           focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        aria-expanded="false"
+                        aria-controls="mobile-menu"
+                        aria-label="Ouvrir le menu"
+                    >
+
+                        {# Icône burger #}
+                        <svg
+                            data-menu-icon="open"
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M4 6h16M4 12h16M4 18h16"
+                            />
+                        </svg>
+
+                        {# Icône fermer #}
+                        <svg
+                            data-menu-icon="close"
+                            class="w-6 h-6 hidden"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+
+                    </button>
+
+                </div>
+
+            </nav>
+
+            {#  MENU MOBILE #}
+            <div
+                id="mobile-menu"
+                class="hidden md:hidden border-t border-stone-800 bg-stone-900"
+            >
+
+                {# Navigation #}
+                <ul class="max-w-7xl mx-auto px-4 pt-4 flex flex-col gap-1 text-sm">
+
                     <li>
                         <a
-                            href="{{ path('app_cart_index') }}"
-                            class="relative inline-flex items-center p-2 rounded-lg
-                          hover:bg-stone-800 transition
-                          focus:outline-none focus:ring-2 focus:ring-amber-500"
-                            aria-label="Voir mon panier{% if cartCount > 0 %} ({{ cartCount }} article{{ cartCount > 1 ? 's' : '' }}){% endif %}"
+                            href="{{ path('app_home') }}"
+                            class="block px-3 py-2.5 rounded-lg hover:bg-stone-800 transition"
                         >
-
-                            <span aria-hidden="true" class="text-xl">🛒</span>
-
-                            {% if cartCount > 0 %}
-                                <span
-                                    aria-hidden="true"
-                                    class="absolute -top-1 -right-1 min-w-5 h-5 px-1
-                                     rounded-full bg-amber-600 text-white
-                                     text-xs font-bold
-                                     flex items-center justify-center"
-                                >
-                                    {{ cartCount }}
-                                </span>
-                            {% endif %}
+                            Accueil
                         </a>
                     </li>
+
+                    <li>
+                        <a
+                            href="{{ path('app_catalog_index') }}"
+                            class="block px-3 py-2.5 rounded-lg hover:bg-stone-800 transition"
+                        >
+                            Catalogue
+                        </a>
+                    </li>
+
                 </ul>
-            </nav>
+
+                {# Compte #}
+                <div class="max-w-7xl mx-auto px-4 pb-4">
+                    <ul class="flex flex-col gap-1 text-sm border-t border-stone-800 pt-3">
+
+                        {% if app.user %}
+
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li>
+                                    <a
+                                        href="{{ path('admin_dashboard') }}"
+                                        class="block px-3 py-2.5 rounded-lg hover:bg-stone-800 transition"
+                                    >
+                                        📊 Administration
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <li>
+                                <a
+                                    href="{{ path('app_logout') }}"
+                                    class="block px-3 py-2.5 rounded-lg hover:bg-stone-800 transition"
+                                >
+                                    Déconnexion
+                                </a>
+                            </li>
+
+                        {% else %}
+
+                            <li>
+                                <a
+                                    href="{{ path('app_login') }}"
+                                    class="block px-3 py-2.5 rounded-lg hover:bg-stone-800 transition"
+                                >
+                                    Connexion
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    href="{{ path('app_register') }}"
+                                    class="block px-3 py-2.5 rounded-lg bg-amber-700 hover:bg-amber-600
+                                  transition text-center font-medium"
+                                >
+                                    Créer un compte
+                                </a>
+                            </li>
+
+                        {% endif %}
+
+                    </ul>
+                </div>
+
+            </div>
+
         </header>
 
         {#  MESSAGES FLASH #}
