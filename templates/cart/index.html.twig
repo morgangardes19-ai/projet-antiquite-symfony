@@ -25,125 +25,160 @@
         {% else %}
 
             {# PANIER REMPLI #}
-            <div class="bg-white rounded-xl border border-stone-200 overflow-hidden">
-                <table class="w-full text-sm">
-                    <thead class="bg-stone-100 text-left text-stone-600">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 font-medium">Pièce</th>
-                            <th scope="col" class="px-4 py-3 font-medium">Prix unitaire</th>
-                            <th scope="col" class="px-4 py-3 font-medium">Quantité</th>
-                            <th scope="col" class="px-4 py-3 font-medium text-right">Sous-total</th>
-                            <th scope="col" class="px-4 py-3">
-                                <span class="sr-only">Actions</span>
-                            </th>
-                        </tr>
-                    </thead>
+            <div class="bg-white rounded-xl border border-stone-200">
 
-                    <tbody>
-                        {% for line in lines %}
-                            <tr class="border-t border-stone-200">
+                {# EN-TÊTE — desktop uniquement #}
+                <div
+                    class="hidden md:flex md:items-center md:gap-4 px-4 py-3
+                            bg-stone-100 text-sm text-stone-600 rounded-t-lg"
+                >
+                    <span class="grow basis-0">Pièce</span>
+                    <span class="w-28 text-right">Prix unitaire</span>
+                    <span class="w-44">Quantité</span>
+                    <span class="w-28 text-right">Sous-total</span>
+                    <span class="w-6"><span class="sr-only">Actions</span></span>
+                </div>
 
-                                {# Pièce #}
-                                <td class="px-4 py-4">
-                                    <a
-                                        href="{{ path('app_catalog_show', {'slug': line.product.slug}) }}"
-                                        class="font-medium text-stone-900 hover:text-amber-700 transition"
-                                    >
-                                        {{ line.product.name }}
-                                    </a>
-                                </td>
+                {# LIGNES #}
+                <ul class="divide-y divide-stone-200">
+                    {% for line in lines %}
+                        <li
+                            class="flex flex-col gap-3 p-4
+                                   md:flex-row md:items-center md:gap-4 md:px-4 md:py-4"
+                        >
 
-                                {# Prix unitaire #}
-                                <td class="px-4 py-4 text-stone-900">
+                            {# PIÈCE #}
+                            <div
+                                class="border-b border-stone-100 pb-2
+                                        md:border-0 md:pb-0 md:grow md:basis-0"
+                            >
+                                <a
+                                    href="{{ path('app_catalog_show', {'slug': line.product.slug}) }}"
+                                    class="font-medium text-stone-900 hover:text-amber-700 transition"
+                                >
+                                    {{ line.product.name }}
+                                </a>
+                            </div>
+
+                            {# PRIX UNITAIRE #}
+                            <div
+                                class="flex items-center justify-between gap-3
+                                        md:w-28 md:justify-end"
+                            >
+                                <span
+                                    class="text-xs font-medium uppercase tracking-wide
+                                             text-stone-500 md:hidden"
+                                >
+                                    Prix unitaire
+                                </span>
+                                <span class="text-sm text-stone-900">
                                     {{ line.product.price|number_format(2, ',', ' ') }} €
-                                </td>
+                                </span>
+                            </div>
 
-                                {# Quantité modifiable #}
-                                <td class="px-4 py-4 text-stone-900">
-                                    <form
-                                        method="post"
-                                        action="{{ path('app_cart_update', {'id': line.product.id}) }}"
-                                        class="flex items-center gap-2"
-                                    >
+                            {# QUANTITÉ #}
+                            <div class="flex items-center justify-between gap-3 md:w-44">
+                                <span
+                                    class="text-xs font-medium uppercase tracking-wide
+                                             text-stone-500 md:hidden"
+                                >
+                                    Quantité
+                                </span>
 
-                                        <label for="qty-{{ line.product.id }}" class="sr-only">
-                                            Quantité pour {{ line.product.name }}
-                                        </label>
+                                <form
+                                    method="post"
+                                    action="{{ path('app_cart_update', {'id': line.product.id}) }}"
+                                    class="flex items-center gap-1.5 md:gap-2"
+                                >
+                                    <label for="qty-{{ line.product.id }}" class="sr-only">
+                                        Quantité pour {{ line.product.name }}
+                                    </label>
 
-                                        <input
-                                            type="number"
-                                            id="qty-{{ line.product.id }}"
-                                            name="quantity"
-                                            value="{{ line.quantity }}"
-                                            min="1"
-                                            max="{{ line.product.stock }}"
-                                            class="w-20 rounded-lg border-stone-300 text-center text-sm
+                                    <input
+                                        type="number"
+                                        id="qty-{{ line.product.id }}"
+                                        name="quantity"
+                                        value="{{ line.quantity }}"
+                                        min="1"
+                                        max="{{ line.product.stock }}"
+                                        class="w-16 md:w-20 rounded-lg border-stone-300 text-stone-900 text-center text-sm
                                           focus:border-amber-500 focus:ring-amber-500"
-                                        >
+                                    >   
 
-                                        <input
-                                            type="hidden"
-                                            name="_token"
-                                            value="{{ csrf_token('cart_update_' ~ line.product.id) }}"
-                                        >
-
-                                        <button
-                                            type="submit"
-                                            class="text-xs font-medium text-amber-700 hover:underline"
-                                        >
-                                            Modifier
-                                        </button>
-                                    </form>
-                                </td>
-
-                                {# Sous-total #}
-                                <td class="px-4 py-4 text-stone-900 text-right font-semibold">
-                                    {{ line.subtotal|number_format(2, ',', ' ') }} €
-                                </td>
-
-                                {# Supprimer #}
-                                <td class="px-4 py-4 text-right">
-                                    <form
-                                        method="post"
-                                        action="{{ path('app_cart_remove', {'id': line.product.id}) }}"
+                                    <input
+                                        type="hidden"
+                                        name="_token"
+                                        value="{{ csrf_token('cart_update_' ~ line.product.id) }}"
                                     >
 
-                                        <input
-                                            type="hidden"
-                                            name="_token"
-                                            value="{{ csrf_token('cart_remove_' ~ line.product.id) }}"
-                                        >
+                                    <button
+                                        type="submit"
+                                        class="text-xs font-medium text-amber-700 hover:underline"
+                                    >
+                                        Modifier
+                                    </button>
+                                </form>
+                            </div>
 
-                                        <button
-                                            type="submit"
-                                            class="text-stone-400 hover:text-red-600 transition
-                                           focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-                                            aria-label="Retirer {{ line.product.name }} du panier"
-                                        >
-                                            <span aria-hidden="true">🗑️</span>
-                                        </button>
-                                    </form>
-                                </td>
+                            {# SOUS-TOTAL #}
+                            <div
+                                class="flex items-center justify-between gap-3
+                                        md:w-28 md:justify-end"
+                            >
+                                <span
+                                    class="text-xs font-medium uppercase tracking-wide
+                                             text-stone-500 md:hidden"
+                                >
+                                    Sous-total
+                                </span>
+                                <span class="text-sm font-semibold text-stone-900">
+                                    {{ line.subtotal|number_format(2, ',', ' ') }} €
+                                </span>
+                            </div>
 
-                            </tr>
-                        {% endfor %}
-                    </tbody>
+                            {# SUPPRIMER #}
+                            <div class="flex items-center justify-end gap-3 md:w-6">
+                                <form
+                                    method="post"
+                                    action="{{ path('app_cart_remove', {'id': line.product.id}) }}"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="_token"
+                                        value="{{ csrf_token('cart_remove_' ~ line.product.id) }}"
+                                    >
 
-                    <tfoot>
-                        <tr class="border-t-2 border-stone-300 bg-stone-50">
-                            <td colspan="3" class="px-4 py-4 text-right font-semibold text-stone-700">
-                                Total
-                            </td>
-                            <td class="px-4 py-4 text-right text-xl font-bold text-amber-800">
-                                {{ total|number_format(2, ',', ' ') }} €
-                            </td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center gap-2 text-sm text-stone-500
+                                               hover:text-red-600 transition rounded
+                                               focus:outline-none focus:ring-2 focus:ring-red-500"
+                                        aria-label="Retirer {{ line.product.name }} du panier"
+                                    >
+                                        <span aria-hidden="true">🗑️</span>
+                                        <span class="md:hidden">Retirer</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                {# TOTAL #}
+                <div
+                    class="flex items-center justify-between gap-4
+                            border-t-2 border-stone-300 bg-stone-50 px-4 py-4 rounded-lg"
+                >
+                    <span class="font-semibold text-stone-700">Total</span>
+                    <span class="text-xl font-bold text-amber-800">
+                        {{ total|number_format(2, ',', ' ') }} €
+                    </span>
+                </div>
+
             </div>
 
-            <div class="mt-6 flex justify-between items-center">
+            <div class="pt-6 flex justify-between items-center">
                 <a
                     href="{{ path('app_catalog_index') }}"
                     class="text-sm text-stone-600 hover:text-amber-700 transition"

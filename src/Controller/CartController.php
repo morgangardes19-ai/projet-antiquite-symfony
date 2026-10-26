@@ -48,11 +48,11 @@ class CartController extends AbstractController
     #[Route('/ajouter/{id}', name: 'add', methods: ['POST'])]
     public function add(Product $product, Request $request, CartService $cartService): Response
     {
-        // ① Combien en reste-t-il VRAIMENT ?
+        // Combien en reste-t-il ?
         $alreadyInCart = $cartService->getQuantity($product->getId());
         $remaining     = max(0, $product->getStock() - $alreadyInCart);
 
-        // ② Le panier est déjà plein → on refuse
+        // Le panier est déjà plein → on refuse
         if ($remaining < 1) {
             $this->addFlash('danger', sprintf(
                 'Vous avez déjà les %d exemplaire(s) disponible(s) de cette pièce dans votre panier.',
@@ -69,7 +69,7 @@ class CartController extends AbstractController
         ]);
 
         $form->handleRequest($request);
-
+        //  Quantité + bouton ajouté au panier
         if ($form->isSubmitted() && $form->isValid()) {
 
             $quantity = $form->get('quantity')->getData();
