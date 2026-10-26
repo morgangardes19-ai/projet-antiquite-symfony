@@ -25,12 +25,12 @@
         {% else %}
 
             {# PANIER REMPLI #}
-            <div class="bg-white rounded-xl border border-stone-200">
+            <div class="flex flex-col gap-2">
 
-                {# EN-TÊTE — desktop uniquement #}
+                {# ---------- EN-TÊTE DE COLONNES — desktop uniquement ---------- #}
                 <div
-                    class="hidden md:flex md:items-center md:gap-4 px-4 py-3
-                            bg-stone-100 text-sm text-stone-600 rounded-t-lg"
+                    class="hidden md:flex md:items-center md:gap-4 px-4 py-2
+                            text-xs uppercase tracking-wider text-stone-500"
                 >
                     <span class="grow basis-0">Pièce</span>
                     <span class="w-28 text-right">Prix unitaire</span>
@@ -39,15 +39,16 @@
                     <span class="w-6"><span class="sr-only">Actions</span></span>
                 </div>
 
-                {# LIGNES #}
-                <ul class="divide-y divide-stone-200">
+                {# ---------- CARTES ---------- #}
+                <ul class="flex flex-col gap-4">
                     {% for line in lines %}
                         <li
                             class="flex flex-col gap-3 p-4
+                                   bg-white rounded-xl border border-stone-200
                                    md:flex-row md:items-center md:gap-4 md:px-4 md:py-4"
                         >
 
-                            {# PIÈCE #}
+                            {# ---------- PIÈCE — titre de la carte ---------- #}
                             <div
                                 class="border-b border-stone-100 pb-2
                                         md:border-0 md:pb-0 md:grow md:basis-0"
@@ -60,7 +61,7 @@
                                 </a>
                             </div>
 
-                            {# PRIX UNITAIRE #}
+                            {# ---------- PRIX UNITAIRE ---------- #}
                             <div
                                 class="flex items-center justify-between gap-3
                                         md:w-28 md:justify-end"
@@ -76,7 +77,7 @@
                                 </span>
                             </div>
 
-                            {# QUANTITÉ #}
+                            {# ---------- QUANTITÉ ---------- #}
                             <div class="flex items-center justify-between gap-3 md:w-44">
                                 <span
                                     class="text-xs font-medium uppercase tracking-wide
@@ -101,9 +102,9 @@
                                         value="{{ line.quantity }}"
                                         min="1"
                                         max="{{ line.product.stock }}"
-                                        class="w-16 md:w-20 rounded-lg border-stone-300 text-stone-900 text-center text-sm
+                                        class="w-16 md:w-20 rounded-lg border-stone-300 text-center text-sm
                                           focus:border-amber-500 focus:ring-amber-500"
-                                    >   
+                                    >
 
                                     <input
                                         type="hidden"
@@ -120,7 +121,7 @@
                                 </form>
                             </div>
 
-                            {# SOUS-TOTAL #}
+                            {# ---------- SOUS-TOTAL ---------- #}
                             <div
                                 class="flex items-center justify-between gap-3
                                         md:w-28 md:justify-end"
@@ -136,8 +137,12 @@
                                 </span>
                             </div>
 
-                            {# SUPPRIMER #}
-                            <div class="flex items-center justify-end gap-3 md:w-6">
+                            {# ---------- SUPPRIMER ---------- #}
+                            <div
+                                class="flex items-center justify-end gap-3
+                                        border-t border-stone-100 pt-2
+                                        md:border-0 md:pt-0 md:w-6"
+                            >
                                 <form
                                     method="post"
                                     action="{{ path('app_cart_remove', {'id': line.product.id}) }}"
@@ -165,10 +170,10 @@
                     {% endfor %}
                 </ul>
 
-                {# TOTAL #}
+                {# ---------- TOTAL ---------- #}
                 <div
                     class="flex items-center justify-between gap-4
-                            border-t-2 border-stone-300 bg-stone-50 px-4 py-4 rounded-lg"
+                            bg-stone-50 rounded-xl border border-stone-200 px-4 py-4"
                 >
                     <span class="font-semibold text-stone-700">Total</span>
                     <span class="text-xl font-bold text-amber-800">
