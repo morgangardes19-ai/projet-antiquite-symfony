@@ -147,11 +147,13 @@
                             <li>
                                 <a
                                     href="{{ path('admin_product_edit', {'id': product.id}) }}"
-                                    class="flex items-center gap-4 p-3 rounded-lg
+                                    class="flex items-center gap-3 p-3 rounded-lg
                                       hover:bg-stone-50 transition
-                                      focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                      focus:outline-none focus:ring-2 focus:ring-amber-500
+                                      md:gap-4"
                                 >
 
+                                    {# Vignette #}
                                     <div
                                         class="w-10 h-10 rounded-lg overflow-hidden
                                             bg-stone-100 shrink-0"
@@ -167,20 +169,32 @@
                                         {% endif %}
                                     </div>
 
-                                    <div class="flex flex-col min-w-0 flex-1">
-                                        <span class="text-sm font-medium text-stone-900 truncate">
-                                            {{ product.name }}
+                                    {# Nom, slug et prix #}
+                                    <div
+                                        class="flex flex-col gap-2 min-w-0 flex-1
+                                            md:flex-row md:items-center md:gap-4"
+                                    >
+
+                                        <div class="flex flex-col min-w-0 md:flex-1">
+                                            <span class="text-sm font-medium text-stone-900 truncate">
+                                                {{ product.name }}
+                                            </span>
+                                            <span class="text-xs text-stone-400 truncate">
+                                                {{ product.slug }}
+                                            </span>
+                                        </div>
+
+                                        <span
+                                            class="text-sm font-medium text-stone-900
+                                                whitespace-nowrap"
+                                        >
+                                            {{ product.price|number_format(2, ',', ' ') }} €
                                         </span>
-                                        <span class="text-xs text-stone-400 truncate">
-                                            {{ product.slug }}
-                                        </span>
+
+                                        {# Flèche #}
+                                        <span class="shrink-0 text-stone-300" aria-hidden="true">→</span>
+
                                     </div>
-
-                                    <span class="text-sm font-medium text-stone-900 whitespace-nowrap">
-                                        {{ product.price|number_format(2, ',', ' ') }} €
-                                    </span>
-
-                                    <span class="text-stone-300" aria-hidden="true">→</span>
 
                                 </a>
                             </li>
