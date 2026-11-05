@@ -70,7 +70,10 @@ class ProductType extends AbstractType
                 'required' => false,
                 'attr'     => ['accept' => 'image/jpeg,image/png,image/webp'],
                 'constraints' => [
-                    new Count(max: 5),
+                    new Count(
+                        max: 5,
+                        maxMessage: "Vous ne pouvez pas mettre plus de 5 images pour une même pièce."
+                    ),
                     // PROTECTION 1 : validation du type MIME et de la taille
                     new All([
                         new Image(
